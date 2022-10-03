@@ -1,5 +1,7 @@
 package edu.kmaooad;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpMethod;
 import com.microsoft.azure.functions.HttpRequestMessage;
@@ -9,6 +11,7 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 /**
@@ -22,19 +25,27 @@ public class Function {
     @FunctionName("TelegramWebhook")
     public HttpResponseMessage run(
             @HttpTrigger(
-                name = "req",
-                methods = {HttpMethod.POST},
-                authLevel = AuthorizationLevel.FUNCTION)
-                HttpRequestMessage<Optional<String>> request,
+                    name = "req",
+                    methods = {HttpMethod.POST},
+                    authLevel = AuthorizationLevel.FUNCTION)
+            HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
         context.getLogger().info("Java HTTP trigger processed a request.");
 
-        final String name = request.getBody().orElse(null);
+        final String telegramHook = request.getBody().orElse(null);
 
-        if (name == null) {
-            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass a name in the request body").build();
+        if (telegramHook == null) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass a hook date from telegram").build();
         } else {
-            return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
+            try {
+                JsonObject jsonObject = JsonParser.parseString(telegramHook).getAsJsonObject();
+                String messageID = jsonObject.getAsJsonObject("message").get("message_id").getAsString();
+                System.out.println(messageID);
+                return request.createResponseBuilder(HttpStatus.OK).body(messageID).build();
+            } catch (Exception e) {
+                return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please check request and try again").build();
+            }
         }
     }
+
 }
