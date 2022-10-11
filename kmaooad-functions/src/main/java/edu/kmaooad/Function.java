@@ -58,7 +58,7 @@ public class Function {
      * Write telegram json response to db
      */
     public void WriteTelegramJSONToDB(String response) {
-        String uri = "mongodb+srv://Opossum:Sh56MZnkL00DYYI7@opossum.egv5fqu.mongodb.net/?retryWrites=true&w=majority";
+        String uri = "mongodb://Opossum:Sh56MZnkL00DYYI7@ac-eyakdio-shard-00-00.egv5fqu.mongodb.net:27017,ac-eyakdio-shard-00-01.egv5fqu.mongodb.net:27017,ac-eyakdio-shard-00-02.egv5fqu.mongodb.net:27017/?ssl=true&replicaSet=atlas-h2y16s-shard-0&authSource=admin&retryWrites=true&w=majority";
 
         MongoClient mongoClient = MongoClients.create(uri);
         MongoDatabase database = mongoClient.getDatabase("opossum_bot");
