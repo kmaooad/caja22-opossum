@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  PACKAGE_DIRECTORY: './kmaooad-functions' # set this to the directory which contains pom.xml file
+  JAVA_VERSION: '11' # set this to the java version to use
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
+
+      - name: Setup Java Sdk ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          pushd './${{ env.PACKAGE_DIRECTORY }}'
+          mvn install -DskipTests=true -B -V
+          popd
+
+      - name: Run tests and collect coverage
+        shell: pwsh
+        run: |
+          pushd './${{ env.PACKAGE_DIRECTORY }}'
+          mvn -B test
+          popd
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+      
+      
