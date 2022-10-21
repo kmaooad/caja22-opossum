@@ -10,6 +10,7 @@ public class BotUpdateResult {
     }
 
     private String messageId;
+    private String wholeMessage;
     private long l;
 
     public long getL() {
@@ -18,6 +19,10 @@ public class BotUpdateResult {
 
     public String getMessageId() {
         return messageId;
+    }
+
+    public String getWholeMessage() {
+        return wholeMessage;
     }
 
     private BotUpdateResult(Boolean success, String messageId) {

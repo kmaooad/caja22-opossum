@@ -1,13 +1,16 @@
 package edu.kmaooad.functions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.azure.functions.*;
 import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 import edu.kmaooad.DTO.BotUpdate;
 import edu.kmaooad.DTO.BotUpdateResult;
+import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.cloud.function.adapter.azure.FunctionInvoker;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -26,19 +29,30 @@ public class TelegramWebhookHandler extends FunctionInvoker<BotUpdate, BotUpdate
                     name = "req",
                     methods = {HttpMethod.POST},
                     authLevel = AuthorizationLevel.FUNCTION)
-                    HttpRequestMessage<Optional<String>> request,
+            HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
         context.getLogger().info("Java HTTP trigger processed a request.");
 
-        BotUpdate upd = new BotUpdate();
+        try {
+            String req = request.getBody().orElse(null);
+            context.getLogger().info(req);
+            BotUpdate upd = new ObjectMapper()
+                    .readerFor(BotUpdate.class)
+                    .readValue(req);
+            upd.setWholeMessage(req);
 
-        upd.setMessageId("message10");
-
-        return request
-                .createResponseBuilder(HttpStatus.OK)
-                .body(handleRequest(upd, context))
-                .header("Content-Type", "application/json")
-                .build();
+            return request
+                    .createResponseBuilder(HttpStatus.OK)
+                    .body(handleRequest(upd, context))
+                    .header("Content-Type", "application/json")
+                    .build();
+        } catch (Exception e) {
+            context.getLogger().info(e.toString() + Arrays.toString(e.getStackTrace()));
+            return request
+                    .createResponseBuilder(HttpStatus.BAD_REQUEST)
+                    .body("Check request and try again")
+                    .build();
+        }
     }
 }
