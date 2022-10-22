@@ -7,6 +7,9 @@ import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 import edu.kmaooad.DTO.BotUpdate;
 import edu.kmaooad.DTO.BotUpdateResult;
+import edu.kmaooad.service.TelegramMessagesService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.cloud.function.adapter.azure.FunctionInvoker;
 
@@ -17,7 +20,6 @@ import java.util.Optional;
  * Azure Functions with HTTP Trigger.
  */
 public class TelegramWebhookHandler extends FunctionInvoker<BotUpdate, BotUpdateResult> {
-
     /**
      * This function listens at endpoint "/api/TelegramWebhook". To invoke it using
      * "curl" command in bash:
@@ -40,7 +42,6 @@ public class TelegramWebhookHandler extends FunctionInvoker<BotUpdate, BotUpdate
             BotUpdate upd = new ObjectMapper()
                     .readerFor(BotUpdate.class)
                     .readValue(req);
-            upd.setWholeMessage(req);
 
             return request
                     .createResponseBuilder(HttpStatus.OK)
