@@ -7,10 +7,6 @@ import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 import edu.kmaooad.DTO.BotUpdate;
 import edu.kmaooad.DTO.BotUpdateResult;
-import edu.kmaooad.service.TelegramMessagesService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.cloud.function.adapter.azure.FunctionInvoker;
 
 import java.util.Arrays;
@@ -31,7 +27,7 @@ public class TelegramWebhookHandler extends FunctionInvoker<BotUpdate, BotUpdate
                     name = "req",
                     methods = {HttpMethod.POST},
                     authLevel = AuthorizationLevel.FUNCTION)
-            HttpRequestMessage<Optional<String>> request,
+                    HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
         context.getLogger().info("Java HTTP trigger processed a request.");

@@ -1,7 +1,5 @@
 package edu.kmaooad.DTO;
 
-import lombok.Data;
-
 public class BotUpdateResult {
     private Boolean success;
 

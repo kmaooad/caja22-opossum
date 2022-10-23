@@ -2,13 +2,14 @@ package edu.kmaooad.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
 public class BotUpdate {
 
     private String messageId;
