@@ -8,10 +8,14 @@ import com.microsoft.azure.functions.annotation.HttpTrigger;
 import edu.kmaooad.DTO.BotUpdate;
 import edu.kmaooad.DTO.BotUpdateResult;
 import edu.kmaooad.service.TelegramMessagesService;
+import edu.kmaooad.telegram.StudentsBot;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.cloud.function.adapter.azure.FunctionInvoker;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -19,7 +23,9 @@ import java.util.Optional;
 /**
  * Azure Functions with HTTP Trigger.
  */
-public class TelegramWebhookHandler extends FunctionInvoker<BotUpdate, BotUpdateResult> {
+public class TelegramWebhookHandler extends FunctionInvoker<Update, BotApiMethod<?>> {
+    @Autowired
+    private StudentsBot studentsBot;
     /**
      * This function listens at endpoint "/api/TelegramWebhook". To invoke it using
      * "curl" command in bash:
@@ -38,14 +44,17 @@ public class TelegramWebhookHandler extends FunctionInvoker<BotUpdate, BotUpdate
 
         try {
             String req = request.getBody().orElse(null);
-            context.getLogger().info(req);
+//            context.getLogger().info(req);
+
             BotUpdate upd = new ObjectMapper()
                     .readerFor(BotUpdate.class)
                     .readValue(req);
 
+            Update update = new ObjectMapper().readerFor(Update.class).readValue(req);
+
             return request
                     .createResponseBuilder(HttpStatus.OK)
-                    .body(handleRequest(upd, context))
+                    .body(handleRequest(update, context))
                     .header("Content-Type", "application/json")
                     .build();
         } catch (Exception e) {
