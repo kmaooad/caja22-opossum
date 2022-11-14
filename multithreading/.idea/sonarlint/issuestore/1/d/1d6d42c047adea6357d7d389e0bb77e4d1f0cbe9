@@ -1,0 +1,31 @@
+
+=
+java:S2189""Add an end condition to this loop.(˜ïˆžÿÿÿÿÿ
+=
+java:S2189 ""Add an end condition to this loop.(˜ïˆžÿÿÿÿÿ
+J
+java:S6212"/Declare this local variable with "var" instead.(ùó›Ìøÿÿÿÿ
+t
+java:S2142."^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€
+N	java:S1063"9Replace this use of System.out or System.err by a logger.(™Àïî
+K
+java:S24464"0"notify" may not wake up the appropriate thread.(óÄ£¶øÿÿÿÿ
+t
+java:S2142<"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€
+S	java:S106A"9Replace this use of System.out or System.err by a logger.(ï¸Ì™ÿÿÿÿÿ
+K
+java:S2446B"0"notify" may not wake up the appropriate thread.(óÄ£¶øÿÿÿÿ
+J
+java:S6212H"/Declare this local variable with "var" instead.(áäØüÿÿÿÿ
+J
+java:S6212J"/Declare this local variable with "var" instead.(Ëž¬ñüÿÿÿÿ
+E
+java:S6212K"/Declare this local variable with "var" instead.(©Îó 
+E
+java:S6212L"/Declare this local variable with "var" instead.(­Òé¤
+J
+java:S6212N"/Declare this local variable with "var" instead.(¶êðÈÿÿÿÿÿ
+D
+java:S6212O"/Declare this local variable with "var" instead.(ðÆ¼R
+E
+java:S6212P"/Declare this local variable with "var" instead.(Åÿº¯
