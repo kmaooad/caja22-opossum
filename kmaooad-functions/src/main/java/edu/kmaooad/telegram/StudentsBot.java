@@ -1,111 +1,76 @@
 package edu.kmaooad.telegram;
 
-import edu.kmaooad.constants.bot.BotMessageEnum;
-import edu.kmaooad.functions.TelegramWebhook;
-import edu.kmaooad.telegram.handlers.CallbackQueryHandler;
-import edu.kmaooad.telegram.handlers.MessageHandler;
+import edu.kmaooad.Dispatcher;
+import edu.kmaooad.model.UserRequest;
+import edu.kmaooad.model.UserSession;
+import edu.kmaooad.service.UserSessionService;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.starter.SpringWebhookBot;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 @Slf4j
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Component
 public class StudentsBot extends SpringWebhookBot {
     String botPath;
     String botUsername;
     String botToken;
 
-    MessageHandler messageHandler;
-    CallbackQueryHandler callbackQueryHandler;
+    private final Dispatcher dispatcher;
+    private final UserSessionService userSessionService;
 
-    public StudentsBot(SetWebhook setWebhook,
-                       MessageHandler messageHandler,
-                       CallbackQueryHandler callbackQueryHandler) {
-        super(setWebhook);
-        this.messageHandler = messageHandler;
-        this.callbackQueryHandler = callbackQueryHandler;
+    public StudentsBot(TelegramConfig telegramConfig,
+                       Dispatcher dispatcher,
+                       UserSessionService userSessionService) {
+        super(SetWebhook.builder().url(telegramConfig.getWebhookPath()).build());
+        this.botPath = telegramConfig.getWebhookPath();
+        this.botUsername = telegramConfig.getBotName();
+        this.botToken = telegramConfig.getBotToken();
+        this.dispatcher = dispatcher;
+        this.userSessionService = userSessionService;
     }
 
     @Override
     //Handler for simple message
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        try {
-            return sendMessage((SendMessage) handleUpdate(update));
-        } catch (IllegalArgumentException e) {
-            return sendMessage(update.getMessage().getChatId().toString(),
-                    BotMessageEnum.EXCEPTION_ILLEGAL_MESSAGE.getMessage());
-        } catch (Exception e) {
-            return sendMessage(update.getMessage().getChatId().toString(),
-                    BotMessageEnum.EXCEPTION_UNKNOWN.getMessage());
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            String textFromUser = update.getMessage().getText();
+
+            Long userId = update.getMessage().getFrom().getId();
+            String userFirstName = update.getMessage().getFrom().getFirstName();
+
+            log.info("[{}, {}]: {}", userId, userFirstName, textFromUser);
+
+            Long chatId = update.getMessage().getChatId();
+            UserSession session = userSessionService.getSession(chatId);
+
+            UserRequest userRequest = UserRequest
+                    .builder()
+                    .update(update)
+                    .userSession(session)
+                    .chatId(chatId)
+                    .build();
+
+            BotApiMethod<?> dispatched = dispatcher.dispatch(userRequest);
+
+            return dispatched;
+        } else{
+            log.warn("Unexpected update from user");
+            return null;
         }
     }
-
-    //Handler for inline buttons in bot
-    private BotApiMethod<?> handleUpdate(Update update) throws IOException, TelegramApiException {
-        if (update.hasCallbackQuery()) {
-            CallbackQuery callbackQuery = update.getCallbackQuery();
-            return callbackQueryHandler.processCallbackQuery(callbackQuery);
-        } else {
-            Message message = update.getMessage();
-
-            if (message != null) {
-                return messageHandler.answerMessage(update.getMessage());
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Send message through telegram api and return response
-     */
-
-    public BotApiMethod<?> sendMessage(Long chatId, String text) {
-        return sendMessage(chatId, text, null);
-    }
-
-    public BotApiMethod<?> sendMessage(Long chatId, String text, ReplyKeyboard replyKeyboard) {
-        SendMessage sendMessage = SendMessage
-                .builder()
-                .text(text)
-                .chatId(chatId.toString())
-                //Other possible parse modes: MARKDOWNV2, MARKDOWN, which allows to make text bold, and all other things
-                .parseMode(ParseMode.HTML)
-                .replyMarkup(replyKeyboard)
-                .build();
-        try {
-            execute(sendMessage);
-        } catch (Exception e) {
-            log.error(Arrays.toString(e.getStackTrace()));
-        }
-        return sendMessage;
-    }
-
-    public BotApiMethod<?> sendMessage(SendMessage sendMessage) {
-        try {
-            execute(sendMessage);
-        } catch (Exception e) {
-            log.error(Arrays.toString(e.getStackTrace()));
-        }
-        return sendMessage;
-    }
-
 }

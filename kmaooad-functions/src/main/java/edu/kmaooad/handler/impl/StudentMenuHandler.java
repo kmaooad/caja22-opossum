@@ -5,8 +5,8 @@ import edu.kmaooad.handler.UserRequestHandler;
 import edu.kmaooad.helper.KeyboardHelper;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.model.UserSession;
+import edu.kmaooad.service.TelegramService;
 import edu.kmaooad.service.UserSessionService;
-import edu.kmaooad.telegram.StudentsBot;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -19,12 +19,12 @@ public class StudentMenuHandler extends UserRequestHandler {
     public static String STUDENTS_MAIN = "Студенти";
     public static List<String> cities = List.of("Київ", "Львів");
 
-    private final StudentsBot studentsBot;
+    private final TelegramService telegramService;
     private final KeyboardHelper keyboardHelper;
     private final UserSessionService userSessionService;
 
-    public StudentMenuHandler(StudentsBot studentsBot, KeyboardHelper keyboardHelper, UserSessionService userSessionService) {
-        this.studentsBot = studentsBot;
+    public StudentMenuHandler(TelegramService telegramService, KeyboardHelper keyboardHelper, UserSessionService userSessionService) {
+        this.telegramService = telegramService;
         this.keyboardHelper = keyboardHelper;
         this.userSessionService = userSessionService;
     }
@@ -41,7 +41,7 @@ public class StudentMenuHandler extends UserRequestHandler {
         userSession.setState(ConversationState.WAITING_FOR_CHOICE);
         userSessionService.saveSession(userSession.getChatId(), userSession);
 
-        return studentsBot.sendMessage(userRequest.getChatId(),"Оберіть що хочете робити⤵️", replyKeyboardMarkup);
+        return telegramService.sendMessage(userRequest.getChatId(),"Оберіть що хочете робити⤵️", replyKeyboardMarkup);
     }
 
     @Override
