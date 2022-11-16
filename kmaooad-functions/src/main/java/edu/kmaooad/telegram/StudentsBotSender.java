@@ -8,11 +8,10 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 public class StudentsBotSender extends DefaultAbsSender {
     private final TelegramConfig telegramConfig;
 
-    protected StudentsBotSender(TelegramConfig telegramConfig){
+    protected StudentsBotSender(TelegramConfig telegramConfig) {
         super(new DefaultBotOptions());
         this.telegramConfig = telegramConfig;
     }
-
 
     @Override
     public String getBotToken() {

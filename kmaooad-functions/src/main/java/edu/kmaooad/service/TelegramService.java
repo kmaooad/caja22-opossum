@@ -19,7 +19,7 @@ import java.util.Arrays;
 public class TelegramService {
     private final StudentsBotSender studentsBotSender;
 
-    public TelegramService(StudentsBotSender studentsBotSender){
+    public TelegramService(StudentsBotSender studentsBotSender) {
         this.studentsBotSender = studentsBotSender;
     }
 
@@ -44,11 +44,7 @@ public class TelegramService {
         return sendMessage;
     }
 
-    private void execute(BotApiMethod<?> botApiMethod){
-        try{
-            studentsBotSender.execute(botApiMethod);
-        } catch (Exception e){
-            log.error("Exception while communicating with Telegram API: ", e);
-        }
+    private void execute(BotApiMethod<?> botApiMethod) throws Exception {
+        studentsBotSender.execute(botApiMethod);
     }
 }
