@@ -7,6 +7,5 @@ import java.util.Optional;
 
 public interface GroupRepository extends MongoRepository<Group, String> {
     Optional<Group> findById(String id);
-
     Group findByName(String name);
 }

@@ -42,17 +42,14 @@ public class StudentService {
 
     // повертає true якщо актівіті додано
 // не додає якщо в групі студента вже є ця активність
-    public boolean addStudentActivity(String id, String activityId) {
+    public boolean addStudentActivity(String studentId, String activityId) {
 
-        Optional<Student> student = studentRepository.findById(id);
-        System.out.println(student.get());
+        Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isPresent()) {
             Student studentPresent = student.get();
             List<String> activities = studentPresent.getActivities();
             for (String a : activities) {
-                System.out.println(a);
-                System.out.println();
                 if (a.equals(activityId)) {
                     return false;
                 }
@@ -75,8 +72,8 @@ public class StudentService {
     }
 
     // повертає true якщо актівіті видалено
-    public boolean deleteStudentActivity(String id, String activityId) {
-        Optional<Student> student = studentRepository.findById(id);
+    public boolean deleteStudentActivity(String studentId, String activityId) {
+        Optional<Student> student = studentRepository.findById(studentId);
         if (student.isPresent()) {
             Student studentPresent = student.get();
             List<String> activities = studentPresent.getActivities();
@@ -114,9 +111,9 @@ public class StudentService {
                     found.setGroupId(s.getGroupId());
                     found.setPatronym(s.getPatronym());
                     updatedStudents.add(s);
-                } else {
-                    notUpdatedStudents.add(s);
                 }
+            } else {
+                notUpdatedStudents.add(s);
             }
 
         }

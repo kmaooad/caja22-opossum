@@ -1,24 +1,26 @@
 package edu.kmaooad;
 
 
-import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
-import edu.kmaooad.model.Student;
-import edu.kmaooad.repositories.StudentRepository;
+import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.service.GroupService;
-import edu.kmaooad.service.StudentService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.function.context.test.FunctionalSpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @RunWith(SpringRunner.class)
 @FunctionalSpringBootTest
@@ -30,48 +32,63 @@ public class GroupServiceTest {
     @Autowired
     GroupService groupService;
 
+    @MockBean
+    GroupRepository groupRepository;
 
+    final static Group group1 = new Group();
+    final static String group1Name = "group1";
+    final static  String group1ID = "1";
+    final static String missingID = "2";
+    final static Optional<Group> missingGroup = Optional.empty();
+    final static  String student1ID = "1";
+    final static  String activity1ID = "1";
+
+@Before
+public void initTest(){
+    group1.setId(group1ID);
+    group1.setName("group1");
+    Mockito.doReturn(Optional.of(group1)).when(groupRepository).findById(group1ID);
+    Mockito.doReturn(missingGroup).when(groupRepository).findById(missingID);
+}
     @Test
-    public void addGroup() throws Exception {
-        Group group = new Group();
-        group.setName("group1");
-
-        System.out.println( groupService.addGroup(group));
-
-
+    public void addGroup() {
+        System.out.println( groupService.addGroup(group1));
+        assertTrue(groupService.addGroup(group1));
+        Mockito.doReturn(group1).when(groupRepository).findByName(group1Name);
+        assertFalse(groupService.addGroup(group1));
     }
 
     @Test
-    public void updateGroup() throws Exception {
-        Group group = new Group();
-        group.setId("63728dc9487f3260fb323919");
-        group.setName("group2");
-
-        System.out.println( groupService.updateGroup(group));
-
-
+    public void updateGroup() {
+        group1.setName("group2");
+        assertTrue(groupService.updateGroup(group1));
+        Group group2 = new Group();
+        group2.setId(missingID);
+        assertFalse(groupService.updateGroup(group2));
     }
 
     @Test
-    public void deleteGroup() throws Exception {
-        System.out.println( groupService.deleteGroup("63728a15cb1e30197bac4b3a"));
-
-
+    public void deleteGroup()  {
+        assertTrue( groupService.deleteGroup(group1ID));
+        assertFalse( groupService.deleteGroup(missingID));
     }
-
 
     @Test
-    public void addStudentGroup() throws Exception {
-
-      //  System.out.println(groupService.addStudentGroup( "123", "63728dc9487f3260fb323919"));
-
-        // System.out.println(groupService.deleteStudentGroup( "123", "63728dc9487f3260fb323919"));
-
-      //  System.out.println(groupService.addActivityGroup( "123", "63728dc9487f3260fb323919"));
-
-        System.out.println(groupService.deleteActivityGroup( "123", "63728dc9487f3260fb323919"));
-
-
+    public void addAndDeleteStudentGroup(){
+        assertTrue(groupService.addStudentGroup(student1ID, group1ID));
+        assertFalse(groupService.addStudentGroup(student1ID, group1ID));
+        assertTrue(groupService.deleteStudentGroup(student1ID, group1ID));
+        assertFalse(groupService.deleteStudentGroup(student1ID, group1ID));
     }
+    @Test
+    public void addAndDeleteActivityGroup(){
+        assertTrue(groupService.addActivityGroup(activity1ID, group1ID));
+        assertFalse(groupService.addActivityGroup(activity1ID, group1ID));
+        assertTrue(groupService.deleteActivityGroup(activity1ID, group1ID));
+        assertFalse(groupService.deleteActivityGroup(activity1ID, group1ID));
+    }
+
+
+
 
 }

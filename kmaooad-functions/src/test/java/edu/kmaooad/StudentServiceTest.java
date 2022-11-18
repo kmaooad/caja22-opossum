@@ -4,15 +4,21 @@ package edu.kmaooad;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBObject;
 import edu.kmaooad.model.Activity;
+import edu.kmaooad.model.Group;
 import edu.kmaooad.model.Student;
+import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
 import edu.kmaooad.service.StudentService;
+import org.checkerframework.checker.units.qual.A;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.function.context.test.FunctionalSpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,6 +27,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @FunctionalSpringBootTest
@@ -30,49 +39,91 @@ public class StudentServiceTest {
 
     @Autowired
     StudentService studentService;
-//
-    @Autowired
-StudentRepository rep;
+
+    @MockBean
+    StudentRepository studentRepository;
+
+    @MockBean
+    GroupRepository groupRepository;
+
+    final static Student student1 = new Student();
+    final static Student student2 = new Student();
+    final static Student student3 = new Student();
+    final static String sID1 = "1";
+    final static String sID2 = "2";
+    final static String sID3 = "3";
+    final static String sEmail1 = "e1";
+    final static String sEmail2 = "e2";
+    final static String sEmail3 = "e3";
+    final static List<Student> studentsList = new ArrayList<>();
+    final static String missingID = "4";
+
+    final static Optional<Student> missingStudent = Optional.empty();
+    final static String group1ID = "1";
+    final static Group group1 = new Group();
+
+    final static String activityId = "1";
+    final static String activityInGroupId = "2";
+
+    @Before
+    public void initTest(){
+        student1.setId(sID1);
+        student2.setId(sID2);
+        student3.setId(sID3);
+
+        student1.setEmail(sEmail1);
+        student2.setEmail(sEmail2);
+        student3.setEmail(sEmail3);
+
+        studentsList.add(student1);
+        studentsList.add(student2);
+        studentsList.add(student3);
+
+        group1.setId(group1ID);
+        group1.getActivities().add(activityInGroupId);
+        student1.setGroupId(group1ID);
+        student2.setGroupId(group1ID);
+        student3.setGroupId(group1ID);
 
 
+        Mockito.doReturn(student3).when(studentRepository).findByEmail(sEmail3);
+        Mockito.doReturn(Optional.of(student2)).when(studentRepository).findById(sID2);
+        Mockito.doReturn(Optional.of(student1)).when(studentRepository).findById(sID1);
+        Mockito.doReturn(missingStudent).when(studentRepository).findById(missingID);
+
+        Mockito.doReturn(Optional.of(group1)).when(groupRepository).findById(group1ID);
+
+    }
     @Test
-    public void addStudents() throws Exception {
-        List<Student> students = new ArrayList<>();
-        Student s1 = new Student();
-        s1.setFirstName("Vasia");
-        s1.setEmail("s1");
-        Student s2 = new Student();
-        s2.setFirstName("Vasia");
-        s2.setEmail("s2");
-        students.add(s1);
-        students.add(s2);
-        System.out.println( studentService.addStudents(students));
-
-
+    public void addStudents()  {
+        List<Student> notAdded =  studentService.addStudents(studentsList);
+        List<Student> assumeInDB = new ArrayList<>();
+        assumeInDB.add(student3);
+        for (Student s:notAdded) {
+            assertTrue(assumeInDB.contains(s));
+        }
     }
 
     @Test
     public void updateStudents() {
-        List<Student> students = new ArrayList<>();
-        Student s1 = new Student();
-        s1.setFirstName("Mashka");
-        s1.setId("6372787e65d24d72a2761a48");
-        s1.setEmail("s1");
-        s1.setLastName("123");
-        s1.setGroupId("123");
-        s1.setPatronym("123");
-        s1.setDepartment("123");
-        s1.setGroupId("123");
-
-        students.add(s1);
-
-
-        studentService.updateStudents(students);
+        List<Student> notAdded =  studentService.updateStudents(studentsList);
+        List<Student> assumeNotInDB = new ArrayList<>();
+        assumeNotInDB.add(student3);
+        for (Student s:notAdded) {
+            assertTrue(assumeNotInDB.contains(s));
+        }
     }
+
+
     @Test
-    public void deleteActivityStudent() {
-
-        System.out.println(studentService.deleteStudentActivity("6372787e65d24d72a2761a48", "1234"));
+    public void addAndDeleteActivityStudent() {
+        assertTrue(studentService.addStudentActivity(sID1, activityId));
+        assertFalse(studentService.addStudentActivity(missingID, activityId));
+        assertFalse(studentService.addStudentActivity(sID1, activityInGroupId));
+        assertTrue(studentService.deleteStudentActivity(sID1, activityId));
+        assertFalse(studentService.deleteStudentActivity(missingID, activityId));
     }
+
+
 
 }

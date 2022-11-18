@@ -54,11 +54,12 @@ public class GroupService {
         return false;
     }
 
-
+    // TODO: 11/18/2022 ??? чи вона взагалі потрібна
+    // аналогічно до актівіті
+// нема перевірки чи такий студент є в бд !!!!
     public boolean addStudentGroup(String studentId, String groupId) {
         Optional<Group> group = groupRepository.findById(groupId);
         if (group.isPresent()) {
-            System.out.println("GROUP");
             Group groupPresent = group.get();
             List<String> students = groupPresent.getStudentIds();
             String studentFound = null;
