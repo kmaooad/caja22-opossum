@@ -1,49 +1,38 @@
 package edu.kmaooad;
 
 
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
-import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.Student;
 import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
 import edu.kmaooad.service.StudentService;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.function.context.test.FunctionalSpringBootTest;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-@FunctionalSpringBootTest
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
 
 
-    @Autowired
+    @InjectMocks
     StudentService studentService;
 
-    @MockBean
+    @Mock
     StudentRepository studentRepository;
 
-    @MockBean
+    @Mock
     GroupRepository groupRepository;
 
     final static Student student1 = new Student();
@@ -66,7 +55,8 @@ public class StudentServiceTest {
     final static String activityInGroupId = "2";
 
     @Before
-    public void initTest(){
+    public void initTest() {
+        MockitoAnnotations.openMocks(this);
         student1.setId(sID1);
         student2.setId(sID2);
         student3.setId(sID3);
@@ -94,22 +84,23 @@ public class StudentServiceTest {
         Mockito.doReturn(Optional.of(group1)).when(groupRepository).findById(group1ID);
 
     }
+
     @Test
-    public void addStudents()  {
-        List<Student> notAdded =  studentService.addStudents(studentsList);
+    public void addStudents() {
+        List<Student> notAdded = studentService.addStudents(studentsList);
         List<Student> assumeInDB = new ArrayList<>();
         assumeInDB.add(student3);
-        for (Student s:notAdded) {
+        for (Student s : notAdded) {
             assertTrue(assumeInDB.contains(s));
         }
     }
 
     @Test
     public void updateStudents() {
-        List<Student> notAdded =  studentService.updateStudents(studentsList);
+        List<Student> notAdded = studentService.updateStudents(studentsList);
         List<Student> assumeNotInDB = new ArrayList<>();
         assumeNotInDB.add(student3);
-        for (Student s:notAdded) {
+        for (Student s : notAdded) {
             assertTrue(assumeNotInDB.contains(s));
         }
     }
@@ -123,7 +114,6 @@ public class StudentServiceTest {
         assertTrue(studentService.deleteStudentActivity(sID1, activityId));
         assertFalse(studentService.deleteStudentActivity(missingID, activityId));
     }
-
 
 
 }
