@@ -1,4 +1,4 @@
-package edu.kmaooad.handler.impl;
+package edu.kmaooad.handler.impl.students;
 
 import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.handler.UserRequestHandler;
@@ -14,16 +14,16 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import java.util.List;
 
 @Component
-public class StudentMenuHandler extends UserRequestHandler {
+public class StudentButtonsHandler extends UserRequestHandler {
 
     public static String STUDENTS_MAIN = "Студенти";
-    public static List<String> cities = List.of("Київ", "Львів");
+    public static List<String> cities = List.of("Додати студентів з csv", "Оновити студентів з csv");
 
     private final TelegramService telegramService;
     private final KeyboardHelper keyboardHelper;
     private final UserSessionService userSessionService;
 
-    public StudentMenuHandler(TelegramService telegramService, KeyboardHelper keyboardHelper, UserSessionService userSessionService) {
+    public StudentButtonsHandler(TelegramService telegramService, KeyboardHelper keyboardHelper, UserSessionService userSessionService) {
         this.telegramService = telegramService;
         this.keyboardHelper = keyboardHelper;
         this.userSessionService = userSessionService;
