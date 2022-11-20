@@ -70,4 +70,9 @@ public class StartCommandHandlerTest {
     public void testIsNotApplicable(){
         Assertions.assertFalse(startHandler.isApplicable(userRequestNotApplicable));
     }
+
+    @Test
+    public void shouldBeGlobal(){
+        Assertions.assertTrue(startHandler.isGlobal());
+    }
 }

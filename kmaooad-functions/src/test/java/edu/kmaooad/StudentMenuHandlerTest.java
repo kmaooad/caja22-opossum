@@ -59,4 +59,9 @@ public class StudentMenuHandlerTest {
 
         Assertions.assertTrue(studentMenuHandler.isApplicable(userRequestApplicable));
     }
+
+    @Test
+    public void shouldBeGlobal(){
+        Assertions.assertTrue(studentMenuHandler.isGlobal());
+    }
 }

@@ -58,4 +58,9 @@ public class CancelHandlerTest {
 
         Assertions.assertTrue(cancelHandler.isApplicable(userRequestApplicable));
     }
+
+    @Test
+    public void shouldBeGlobal(){
+        Assertions.assertTrue(cancelHandler.isGlobal());
+    }
 }
