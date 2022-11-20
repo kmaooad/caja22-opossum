@@ -1,7 +1,7 @@
 package edu.kmaooad;
 
 import edu.kmaooad.helper.KeyboardHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.List;

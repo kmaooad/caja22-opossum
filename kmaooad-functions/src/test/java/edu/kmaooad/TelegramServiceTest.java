@@ -2,7 +2,7 @@ package edu.kmaooad;
 
 import edu.kmaooad.service.TelegramService;
 import edu.kmaooad.telegram.StudentsBotSender;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
