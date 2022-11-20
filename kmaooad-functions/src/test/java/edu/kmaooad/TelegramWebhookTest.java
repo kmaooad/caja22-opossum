@@ -2,13 +2,15 @@ package edu.kmaooad;
 
 import edu.kmaooad.functions.TelegramWebhook;
 import edu.kmaooad.telegram.StudentsBot;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -17,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class TelegramWebhookTest {
 
     @Mock
@@ -25,7 +28,7 @@ public class TelegramWebhookTest {
     @InjectMocks
     TelegramWebhook telegramWebhook;
 
-    @Before
+    @BeforeEach
     public void initTest() {
         MockitoAnnotations.openMocks(this);
     }

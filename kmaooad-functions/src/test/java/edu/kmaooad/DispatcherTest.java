@@ -1,28 +1,26 @@
 package edu.kmaooad;
 
-import com.microsoft.azure.functions.HttpResponseMessage;
-import edu.kmaooad.handler.UserRequestHandler;
 import edu.kmaooad.handler.impl.CancelHandler;
 import edu.kmaooad.model.UserRequest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class DispatcherTest {
     private Dispatcher dispatcher;
     @Mock
@@ -49,7 +47,7 @@ public class DispatcherTest {
             .update(request2Update)
             .build();
 
-    @Before
+    @BeforeEach
     public void initTest() {
         MockitoAnnotations.openMocks(this);
         Mockito.doReturn(handleResult1).when(cancelHandler).handle(request1);

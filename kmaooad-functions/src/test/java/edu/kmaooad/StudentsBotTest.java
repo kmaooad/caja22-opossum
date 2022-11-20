@@ -4,7 +4,7 @@ import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.service.UserSessionService;
 import edu.kmaooad.telegram.StudentsBot;
 import edu.kmaooad.telegram.TelegramConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
