@@ -7,15 +7,17 @@ import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.model.UserSession;
 import edu.kmaooad.service.TelegramService;
 import edu.kmaooad.service.UserSessionService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.List;
 
+@Component
 public class GroupButtonsHandler extends UserRequestHandler {
 
-    public static String STUDENTS_MAIN = "Групи";
-    public static List<String> cities = List.of("Редагувати", "Видалити", "Змінити");
+    public static String GROUPS_MAIN = "Групи";
+    public static List<String> buttons = List.of("Редагувати", "Видалити", "Додати");
 
     private final TelegramService telegramService;
     private final KeyboardHelper keyboardHelper;
@@ -29,14 +31,15 @@ public class GroupButtonsHandler extends UserRequestHandler {
 
     @Override
     public boolean isApplicable(UserRequest userRequest) {
-        return isTextMessage(userRequest.getUpdate(), STUDENTS_MAIN);
+        return isTextMessage(userRequest.getUpdate(), GROUPS_MAIN) ||
+                ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE.equals(userRequest.getUserSession().getState());
     }
 
     @Override
     public BotApiMethod<?> handle(UserRequest userRequest) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = keyboardHelper.buildAdditionalActions(cities);
+        ReplyKeyboardMarkup replyKeyboardMarkup = keyboardHelper.buildAdditionalActions(buttons);
         UserSession userSession = userRequest.getUserSession();
-        userSession.setState(ConversationState.WAITING_FOR_CHOICE);
+        userSession.setState(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
         userSessionService.saveSession(userSession.getChatId(), userSession);
 
         return telegramService.sendMessage(userRequest.getChatId(), "Оберіть що хочете робити⤵️", replyKeyboardMarkup);
@@ -44,7 +47,7 @@ public class GroupButtonsHandler extends UserRequestHandler {
 
     @Override
     public boolean isGlobal() {
-        return true;
+        return false;
     }
 
 }

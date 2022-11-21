@@ -33,14 +33,16 @@ public class KeyboardHelper {
     }
 
     public ReplyKeyboardMarkup buildMainMenu() {
-        KeyboardRow keyboardRow = new KeyboardRow();
-        keyboardRow.add("Студенти");
-//        keyboardRow.add("Студенти");
-//        keyboardRow.add("Інше...");
-//
+        KeyboardRow keyboardRow1 = new KeyboardRow();
+        keyboardRow1.add("Групи");
+        keyboardRow1.add("Шаблони груп");
+
+        KeyboardRow keyboardRow2 = new KeyboardRow();
+        keyboardRow2.add("Студенти");
+        keyboardRow2.add("Активності");
 
         return ReplyKeyboardMarkup.builder()
-                .keyboard(List.of(keyboardRow))
+                .keyboard(List.of(keyboardRow1, keyboardRow2))
                 .selective(true)
                 .resizeKeyboard(true)
                 .oneTimeKeyboard(false)
