@@ -15,6 +15,11 @@ public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
 
+    //Get all groups from db
+    public List<Group> getAllGroups(){
+        return groupRepository.findAll();
+    }
+
     // приймає валідну групу
     // повертає тру якщо додано
     // шукає в базі повтори за іменем

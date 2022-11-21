@@ -17,7 +17,7 @@ import java.util.List;
 public class GroupButtonsHandler extends UserRequestHandler {
 
     public static String GROUPS_MAIN = "Групи";
-    public static List<String> buttons = List.of("Редагувати", "Видалити", "Додати");
+    public static List<String> buttons = List.of("Редагувати", "Видалити", "Додати", "Показати всі групи");
 
     private final TelegramService telegramService;
     private final KeyboardHelper keyboardHelper;
@@ -31,16 +31,12 @@ public class GroupButtonsHandler extends UserRequestHandler {
 
     @Override
     public boolean isApplicable(UserRequest userRequest) {
-        return isTextMessage(userRequest.getUpdate(), GROUPS_MAIN) ||
-                ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE.equals(userRequest.getUserSession().getState());
+        return isTextMessage(userRequest.getUpdate(), GROUPS_MAIN);
     }
 
     @Override
     public BotApiMethod<?> handle(UserRequest userRequest) {
         ReplyKeyboardMarkup replyKeyboardMarkup = keyboardHelper.buildAdditionalActions(buttons);
-        UserSession userSession = userRequest.getUserSession();
-        userSession.setState(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
-        userSessionService.saveSession(userSession.getChatId(), userSession);
 
         return telegramService.sendMessage(userRequest.getChatId(), "Оберіть що хочете робити⤵️", replyKeyboardMarkup);
     }
