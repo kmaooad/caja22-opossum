@@ -44,6 +44,8 @@ public class GroupServiceTest {
         MockitoAnnotations.openMocks(this);
         group1.setId(group1ID);
         group1.setName("group1");
+        group1.setYear(2022);
+        group1.setGrade(1);
         Mockito.doReturn(Optional.of(group1)).when(groupRepository).findById(group1ID);
         Mockito.doReturn(missingGroup).when(groupRepository).findById(missingID);
     }
@@ -59,6 +61,8 @@ public class GroupServiceTest {
     @Test
     public void updateGroup() {
         group1.setName("group2");
+        group1.setYear(2023);
+        group1.setGrade(2);
         assertTrue(groupService.updateGroup(group1));
         Group group2 = new Group();
         group2.setId(missingID);

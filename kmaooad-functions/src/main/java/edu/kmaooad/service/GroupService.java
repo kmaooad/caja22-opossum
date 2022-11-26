@@ -37,6 +37,8 @@ public class GroupService {
         if (group.isPresent()) {
             Group groupFound = group.get();
             groupFound.setName(groupUpdate.getName());
+            groupFound.setGrade(groupUpdate.getGrade());
+            groupFound.setYear(groupUpdate.getYear());
             groupRepository.save(groupFound);
             return true;
         }

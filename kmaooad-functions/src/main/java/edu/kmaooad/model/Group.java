@@ -19,6 +19,9 @@ public class Group {
     String id;
 
     String name;
+    Integer grade;
+    Integer year;
+
     List<String> activities = new ArrayList<>();
     List<String> studentIds = new ArrayList<>();
     // айді студентів
