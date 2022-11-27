@@ -29,13 +29,13 @@ public class GetGroupIdHandler extends UserRequestHandler {
     @Override
     public boolean isApplicable(UserRequest userRequest) {
         return isTextMessage(userRequest.getUpdate()) &&
-                ConversationState.WAITING_FOR_GROUP_ID_TO_DELETE.equals(userRequest.getUserSession().getState());
+                ConversationState.WAITING_FOR_GROUP_ID.equals(userRequest.getUserSession().getConversationState());
     }
 
     @Override
     public BotApiMethod<?> handle(UserRequest dispatchRequest) {
         UserSession userSession = dispatchRequest.getUserSession();
-        userSession.setState(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
+        userSession.setConversationState(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
         userSessionService.saveSession(userSession.getChatId(), userSession);
 
         //Add group to db

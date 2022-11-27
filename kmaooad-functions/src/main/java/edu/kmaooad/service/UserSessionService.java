@@ -15,6 +15,7 @@ public class UserSessionService {
         return userSessionMap.getOrDefault(chatId, UserSession
                 .builder()
                 .chatId(chatId)
+                .data(new HashMap<>())
                 .build());
     }
 

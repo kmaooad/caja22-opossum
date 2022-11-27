@@ -36,7 +36,7 @@ public class DeleteGroupHandler extends UserRequestHandler {
         BotApiMethod<?> result = telegramService.sendMessage(dispatchRequest.getChatId(), "Вкажіть ідентифікатор групи.", replyKeyboardMarkup);
 
         UserSession userSession = dispatchRequest.getUserSession();
-        userSession.setState(ConversationState.WAITING_FOR_GROUP_ID_TO_DELETE);
+        userSession.setConversationState(ConversationState.WAITING_FOR_GROUP_ID);
         userSessionService.saveSession(userSession.getChatId(), userSession);
 
         return result;

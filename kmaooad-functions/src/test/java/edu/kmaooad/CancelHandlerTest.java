@@ -40,10 +40,10 @@ public class CancelHandlerTest {
 
     @Test
     public void testHandleMethod() {
-        UserSession session = UserSession.builder().state(ConversationState.WAITING_FOR_TEXT).build();
+        UserSession session = UserSession.builder().conversationState(ConversationState.WAITING_FOR_TEXT).build();
         cancelHandler.handle(UserRequest.builder().userSession(session).build());
 
-        Assertions.assertEquals(session.getState(), ConversationState.CONVERSATION_STARTED);
+        Assertions.assertEquals(session.getConversationState(), ConversationState.CONVERSATION_STARTED);
     }
 
     @Test

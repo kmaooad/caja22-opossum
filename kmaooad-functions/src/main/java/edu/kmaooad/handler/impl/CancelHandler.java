@@ -36,7 +36,7 @@ public class CancelHandler extends UserRequestHandler {
                 "Обирайте з меню нижче ⤵️", replyKeyboard);
 
         UserSession userSession = userRequest.getUserSession();
-        userSession.setState(ConversationState.CONVERSATION_STARTED);
+        userSession.setConversationState(ConversationState.CONVERSATION_STARTED);
         userSessionService.saveSession(userSession.getChatId(), userSession);
         return null;
     }

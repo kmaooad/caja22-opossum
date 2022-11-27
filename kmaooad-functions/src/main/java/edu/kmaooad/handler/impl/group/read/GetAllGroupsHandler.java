@@ -2,7 +2,7 @@ package edu.kmaooad.handler.impl.group.read;
 
 import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.handler.UserRequestHandler;
-import edu.kmaooad.handler.impl.group.GroupTemplateAnswers;
+import edu.kmaooad.handler.impl.group.GroupConstants;
 import edu.kmaooad.helper.KeyboardHelper;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.UserRequest;
@@ -42,7 +42,7 @@ public class GetAllGroupsHandler extends UserRequestHandler {
     @Override
     public BotApiMethod<?> handle(UserRequest dispatchRequest) {
         UserSession userSession = dispatchRequest.getUserSession();
-        userSession.setState(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
+        userSession.setConversationState(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
         userSessionService.saveSession(userSession.getChatId(), userSession);
 
         List<Group> groups = groupService.getAllGroups();
@@ -50,7 +50,7 @@ public class GetAllGroupsHandler extends UserRequestHandler {
 
         for (Group group : groups) {
             telegramService.sendMessage(dispatchRequest.getChatId(),
-                    String.format(GroupTemplateAnswers.SHOW_FULL_GROUP, group.getName(), group.getId()));
+                    String.format(GroupConstants.SHOW_FULL_GROUP, group.getName(), group.getId(), group.getGrade(), group.getYear()));
         }
 
         return null;
