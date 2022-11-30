@@ -51,7 +51,7 @@ public class StartCommandHandlerTest {
         messageApplicable.setText("/start");
         updateApplicable.setMessage(messageApplicable);
 
-        startHandler = new StartCommandHandler(telegramService, keyboardHelper);
+//        startHandler = new StartCommandHandler(telegramService, keyboardHelper, userSessionService);
     }
 
     @Test

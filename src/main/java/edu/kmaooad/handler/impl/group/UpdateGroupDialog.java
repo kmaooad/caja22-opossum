@@ -104,6 +104,7 @@ public class UpdateGroupDialog extends DialogHandler {
         }
         dispatchRequest.getUserSession().setDialogState(null);
         //Go back to the group menu
+        dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
         groupButtonsHandler.handle(dispatchRequest);
     }
 

@@ -34,7 +34,8 @@ public class ShowAllGroupsButtonHandler implements ButtonRequestHandler {
 
     @Override
     public boolean isApplicable(UserRequest request) {
-        return UserRequestHandler.isTextMessage(request.getUpdate(), GroupConstants.GROUP_SHOW_ALL_BUTTON_LABEL);
+        return UserRequestHandler.isTextMessage(request.getUpdate(), GroupConstants.GROUP_SHOW_ALL_BUTTON_LABEL) &&
+                request.getUserSession().getConversationState().equals(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
     }
 
     @Override
@@ -47,6 +48,8 @@ public class ShowAllGroupsButtonHandler implements ButtonRequestHandler {
                     String.format(GroupConstants.SHOW_FULL_GROUP, group.getName(), group.getId(), group.getGrade(), group.getYear()));
         }
 
+        //Set previous state for groupButtonsHandler
+        dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
         return groupButtonsHandler.handle(dispatchRequest);
     }
 }

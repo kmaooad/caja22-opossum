@@ -13,12 +13,7 @@ import java.util.function.Function;
 @Slf4j
 @Component
 public class TelegramWebhook implements Function<Update, BotApiMethod<?>> {
-
-    @Autowired
-    private ModelMapper modelMapper;
-
     private final StudentsBot studentsBot;
-
 
     @Autowired
     public TelegramWebhook(StudentsBot studentsBot) {

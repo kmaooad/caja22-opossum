@@ -35,7 +35,7 @@ public class CancelHandlerTest {
     public void initTests() {
         MockitoAnnotations.openMocks(this);
         Mockito.doReturn(null).when(telegramService).sendMessage(Mockito.any(Long.class), Mockito.any(String.class), Mockito.any(ReplyKeyboard.class));
-        cancelHandler = new CancelHandler(telegramService, keyboardHelper, userSessionService);
+//        cancelHandler = new CancelHandler(telegramService, keyboardHelper, userSessionService);
     }
 
     @Test

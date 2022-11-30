@@ -83,14 +83,15 @@ public abstract class DialogHandler implements UserRequestHandler {
         UserSession userSession = dispatchRequest.getUserSession();
 
         HandlerResponse res = handler.userRequestHandler.handle(dispatchRequest);
+        log.info("Response result: " + res);
 
-        if (nextState == null) {
+        if (res.isSuccess() && nextState == null) {
             //Actions for the last step
             finishActions(dispatchRequest);
         }
 
         //Set next state if current handler was successful
-        if (res.isSuccess()) {
+        if (res.isSuccess() && nextState != null) {
             userSession.setConversationState(nextState);
         }
 

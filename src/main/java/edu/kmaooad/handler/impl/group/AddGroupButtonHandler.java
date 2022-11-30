@@ -1,5 +1,6 @@
 package edu.kmaooad.handler.impl.group;
 
+import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.constants.bot.GlobalConstants;
 import edu.kmaooad.constants.bot.GroupConstants;
 import edu.kmaooad.handler.ButtonRequestHandler;
@@ -22,7 +23,8 @@ public class AddGroupButtonHandler implements ButtonRequestHandler {
 
     @Override
     public boolean isApplicable(UserRequest userRequest) {
-        return UserRequestHandler.isTextMessage(userRequest.getUpdate(), GroupConstants.GROUP_ADD_BUTTON_LABEL);
+        return UserRequestHandler.isTextMessage(userRequest.getUpdate(), GroupConstants.GROUP_ADD_BUTTON_LABEL) &&
+                userRequest.getUserSession().getConversationState().equals(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
     }
 
     @Override

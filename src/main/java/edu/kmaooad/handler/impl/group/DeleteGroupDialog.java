@@ -64,11 +64,12 @@ public class DeleteGroupDialog extends DialogHandler {
         }
         dispatchRequest.getUserSession().setDialogState(null);
         //Go back to the group menu
+        dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
         groupButtonsHandler.handle(dispatchRequest);
     }
 
     @Override
     public DialogState getDialogType() {
-        return DialogState.UPDATE_GROUP;
+        return DialogState.DELETE_GROUP;
     }
 }

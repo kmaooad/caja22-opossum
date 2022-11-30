@@ -8,22 +8,16 @@ import edu.kmaooad.helper.KeyboardHelper;
 import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.model.UserSession;
-import edu.kmaooad.service.TelegramService;
 import edu.kmaooad.service.UserSessionService;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 @Component
 public class CancelHandler implements GlobalRequestHandler {
 
-    private final TelegramService telegramService;
-    private final KeyboardHelper keyboardHelper;
-    private final UserSessionService userSessionService;
+    private final StartCommandHandler startCommandHandler;
 
-    public CancelHandler(TelegramService telegramService, KeyboardHelper keyboardHelper, UserSessionService userSessionService) {
-        this.telegramService = telegramService;
-        this.keyboardHelper = keyboardHelper;
-        this.userSessionService = userSessionService;
+    public CancelHandler(StartCommandHandler startCommandHandler) {
+        this.startCommandHandler = startCommandHandler;
     }
 
     @Override
@@ -33,13 +27,10 @@ public class CancelHandler implements GlobalRequestHandler {
 
     @Override
     public HandlerResponse handle(UserRequest userRequest) {
-        ReplyKeyboard replyKeyboard = keyboardHelper.buildMainMenu();
-
         UserSession userSession = userRequest.getUserSession();
-        userSession.setConversationState(ConversationState.CONVERSATION_STARTED);
-        userSessionService.saveSession(userSession.getChatId(), userSession);
+        userSession.setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
+        userSession.setDialogState(null);
 
-        return new HandlerResponse(telegramService.sendMessage(userRequest.getChatId(),
-                "Обирайте з меню нижче ⤵️", replyKeyboard), true);
+        return startCommandHandler.handle(userRequest);
     }
 }

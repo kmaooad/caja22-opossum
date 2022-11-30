@@ -21,17 +21,16 @@ import java.util.List;
 public class GroupButtonsHandler implements ButtonRequestHandler {
     private final TelegramService telegramService;
     private final KeyboardHelper keyboardHelper;
-    private final UserSessionService userSessionService;
 
-    public GroupButtonsHandler(TelegramService telegramService, KeyboardHelper keyboardHelper, UserSessionService userSessionService) {
+    public GroupButtonsHandler(TelegramService telegramService, KeyboardHelper keyboardHelper) {
         this.telegramService = telegramService;
         this.keyboardHelper = keyboardHelper;
-        this.userSessionService = userSessionService;
     }
 
     @Override
     public boolean isApplicable(UserRequest userRequest) {
-        return UserRequestHandler.isTextMessage(userRequest.getUpdate(), GlobalConstants.GROUP_BUTTON_LABEL);
+        return UserRequestHandler.isTextMessage(userRequest.getUpdate(), GlobalConstants.GROUP_BUTTON_LABEL) &&
+                userRequest.getUserSession().getConversationState().equals(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
     }
 
     @Override
