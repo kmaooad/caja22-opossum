@@ -37,6 +37,7 @@ public class GroupButtonsHandler implements ButtonRequestHandler {
     @Override
     public HandlerResponse handle(UserRequest userRequest) {
         ReplyKeyboardMarkup replyKeyboardMarkup = keyboardHelper.buildGroupMenuWithCancel();
+        userRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
 
         return new HandlerResponse(telegramService.sendMessage(userRequest.getChatId(), "Оберіть що хочете робити⤵️", replyKeyboardMarkup), true);
     }

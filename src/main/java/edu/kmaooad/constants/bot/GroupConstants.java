@@ -37,6 +37,8 @@ public class GroupConstants {
 
     public static final String WRONG_GRADE = "Курс <b>%s</b> неправильний.\nСпробуйте ще раз.";
     public static final String WRONG_YEAR = "Рік <b>%s</b> неправильний.\nСпробуйте ще раз.";
+    public static final String SUCCESSFULLY_DELETED = "Групу успішно видалено";
+    public static final String ERROR_WHILE_DELETE = "Не змогли видалити групу";
 
     public static String groupToString(Group group){
         return String.format(SHOW_FULL_GROUP, group.getName(), group.getId(), group.getGrade(), group.getYear());
