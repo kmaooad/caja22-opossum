@@ -76,6 +76,7 @@ public abstract class DialogHandler implements UserRequestHandler {
 
     @Override
     public final HandlerResponse handle(UserRequest dispatchRequest) {
+        log.info("User session: " + dispatchRequest.getUserSession());
         ConversationState currentState = dispatchRequest.getUserSession().getConversationState();
         ConversationState nextState = findNextState(currentState);
         DialogSingleHandler handler = handlers.get(currentState);
