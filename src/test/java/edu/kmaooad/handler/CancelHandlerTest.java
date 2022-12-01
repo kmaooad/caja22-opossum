@@ -1,8 +1,10 @@
-package edu.kmaooad;
+package edu.kmaooad.handler;
 
 import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.handler.impl.CancelHandler;
+import edu.kmaooad.handler.impl.StartCommandHandler;
 import edu.kmaooad.helper.KeyboardHelper;
+import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.model.UserSession;
 import edu.kmaooad.service.TelegramService;
@@ -27,15 +29,13 @@ public class CancelHandlerTest {
     private CancelHandler cancelHandler;
 
     @Mock
-    private TelegramService telegramService;
-    private KeyboardHelper keyboardHelper = new KeyboardHelper();
-    private UserSessionService userSessionService = new UserSessionService();
+    private StartCommandHandler startCommandHandler;
 
     @BeforeEach
     public void initTests() {
         MockitoAnnotations.openMocks(this);
-        Mockito.doReturn(null).when(telegramService).sendMessage(Mockito.any(Long.class), Mockito.any(String.class), Mockito.any(ReplyKeyboard.class));
-//        cancelHandler = new CancelHandler(telegramService, keyboardHelper, userSessionService);
+        Mockito.doReturn(null).when(startCommandHandler).handle(Mockito.any(UserRequest.class));
+        cancelHandler = new CancelHandler(startCommandHandler);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class CancelHandlerTest {
         UserSession session = UserSession.builder().conversationState(ConversationState.WAITING_FOR_TEXT).build();
         cancelHandler.handle(UserRequest.builder().userSession(session).build());
 
-        Assertions.assertEquals(session.getConversationState(), ConversationState.CONVERSATION_STARTED);
+        Assertions.assertEquals(session.getConversationState(), ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
     }
 
     @Test

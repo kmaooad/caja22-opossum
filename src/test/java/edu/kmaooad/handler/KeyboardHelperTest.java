@@ -1,5 +1,6 @@
-package edu.kmaooad;
+package edu.kmaooad.handler;
 
+import edu.kmaooad.constants.bot.GlobalConstants;
 import edu.kmaooad.helper.KeyboardHelper;
 import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -25,7 +26,7 @@ public class KeyboardHelperTest {
     public void buildMainMenuTestContainsStudentsButton() {
         ReplyKeyboardMarkup result = keyboardHelper.buildMainMenu();
 
-        assertTrue(result.getKeyboard().get(0).contains("Студенти"));
+        assertTrue(result.getKeyboard().get(0).contains(GlobalConstants.GROUP_BUTTON_LABEL));
     }
 
     @Test

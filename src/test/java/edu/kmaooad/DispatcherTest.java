@@ -1,7 +1,12 @@
 package edu.kmaooad;
 
+import edu.kmaooad.constants.bot.GlobalConstants;
+import edu.kmaooad.handler.DialogHandler;
 import edu.kmaooad.handler.impl.CancelHandler;
+import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
+import edu.kmaooad.model.UserSession;
+import edu.kmaooad.service.UserSessionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +20,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,14 +32,15 @@ public class DispatcherTest {
     @Mock
     private CancelHandler cancelHandler;
 
-    final static SendMessage handleResult1 = new SendMessage();
+    private final static UserSession userSession = UserSession.builder().build();
+    private final static HandlerResponse handleResult1 = new HandlerResponse(new SendMessage(), true);
 
-    final static Update request1Update = new Update();
-    final static Update request2Update = new Update();
+    private final static Update request1Update = new Update();
+    private final static Update request2Update = new Update();
 
     static {
         Message message = new Message();
-        message.setText("❌ Скасувати");
+        message.setText(GlobalConstants.CANCEL_BUTTON_LABEL);
         request1Update.setMessage(message);
     }
 
@@ -44,6 +51,7 @@ public class DispatcherTest {
 
     final static UserRequest request2 = UserRequest
             .builder()
+            .userSession(userSession)
             .update(request2Update)
             .build();
 
@@ -52,7 +60,7 @@ public class DispatcherTest {
         MockitoAnnotations.openMocks(this);
         Mockito.doReturn(handleResult1).when(cancelHandler).handle(request1);
         Mockito.doReturn(true).when(cancelHandler).isApplicable(request1);
-//        dispatcher = new Dispatcher(List.of(cancelHandler), userSessionService);
+        dispatcher = new Dispatcher(List.of(cancelHandler), new ArrayList<>(), new ArrayList<>());
     }
 
     @Test
@@ -62,6 +70,6 @@ public class DispatcherTest {
 
     @Test
     public void testNotApplicableCancelHandler() {
-        assertEquals(dispatcher.dispatch(request2), null);
+        assertEquals(dispatcher.dispatch(request2), new HandlerResponse(null, false));
     }
 }

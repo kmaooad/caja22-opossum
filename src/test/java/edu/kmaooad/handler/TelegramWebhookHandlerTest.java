@@ -1,10 +1,11 @@
-package edu.kmaooad;
+package edu.kmaooad.handler;
 
 
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpRequestMessage;
 import com.microsoft.azure.functions.HttpResponseMessage;
 import com.microsoft.azure.functions.HttpStatus;
+import edu.kmaooad.HttpResponseMessageMock;
 import edu.kmaooad.functions.TelegramWebhookHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

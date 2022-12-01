@@ -1,4 +1,4 @@
-package edu.kmaooad;
+package edu.kmaooad.telegram;
 
 import edu.kmaooad.functions.TelegramWebhook;
 import edu.kmaooad.telegram.StudentsBot;
