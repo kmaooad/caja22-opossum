@@ -20,6 +20,6 @@ public interface UserRequestHandler {
     }
 
     static boolean isTextMessage(Update update, String text) {
-        return update.hasMessage() && update.getMessage().hasText() && update.getMessage().getText().equals(text);
+        return isTextMessage(update) && update.getMessage().getText().equals(text);
     }
 }
