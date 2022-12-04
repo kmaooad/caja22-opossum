@@ -8,7 +8,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface GroupTemplateRepository extends MongoRepository<GroupTemplate, String> {
     GroupTemplate findByName(String name);
 
-    GroupTemplate findByYear(String name);
+    GroupTemplate findByYear(Integer year);
 
-    GroupTemplate findByGrade(String name);
+    GroupTemplate findByGrade(Integer grade);
+
+    GroupTemplate findByNameAndYearAndGrade(String name, Integer year, Integer grade);
 }

@@ -1,10 +1,12 @@
 package edu.kmaooad;
 
 
+import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.Student;
 import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
+import edu.kmaooad.service.ServiceException;
 import edu.kmaooad.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -47,7 +48,7 @@ public class StudentServiceTest {
     final static String sEmail1 = "e1";
     final static String sEmail2 = "e2";
     final static String sEmail3 = "e3";
-    final static List<Student> studentsList = new ArrayList<>();
+     static List<Student> studentsList = new ArrayList<>();
     final static String missingID = "4";
 
     final static Optional<Student> missingStudent = Optional.empty();
@@ -56,7 +57,9 @@ public class StudentServiceTest {
 
     final static String activityId = "1";
     final static String activityInGroupId = "2";
-
+    final Activity activity = new Activity();
+    final Activity activityInDb = new Activity();
+    final Activity activityInGroup = new Activity();
     @BeforeEach
     public void initTest() {
         MockitoAnnotations.openMocks(this);
@@ -68,12 +71,16 @@ public class StudentServiceTest {
         student2.setEmail(sEmail2);
         student3.setEmail(sEmail3);
 
+        studentsList = new ArrayList<>();
         studentsList.add(student1);
         studentsList.add(student2);
-        studentsList.add(student3);
+
 
         group1.setId(group1ID);
-        group1.getActivities().add(activityInGroupId);
+        activityInGroup.setId(activityInGroupId);
+        activity.setId(activityId);
+        activityInDb.setId(activityInGroupId);
+        group1.getActivities().add(activityInDb);
         student1.setGroupId(group1ID);
         student2.setGroupId(group1ID);
         student3.setGroupId(group1ID);
@@ -89,33 +96,39 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void addStudents() {
-        List<Student> notAdded = studentService.addStudents(studentsList);
+    public void addStudents() throws ServiceException {
+        List<Student> addedAdded = studentService.addStudents(studentsList);
         List<Student> assumeInDB = new ArrayList<>();
-        assumeInDB.add(student3);
+        assumeInDB.add(student1);
+        assumeInDB.add(student2);
+        for (Student s : addedAdded) {
+            assertTrue(assumeInDB.contains(s));
+        }
+        studentsList.add(student3);
+        assertThrows(ServiceException.class, () ->  studentService.addStudents(studentsList));
+    }
+
+    @Test
+    public void updateStudents() throws ServiceException {
+        List<Student> notAdded = studentService.updateStudents(studentsList);
+        List<Student> assumeInDB = new ArrayList<>();
+        assumeInDB.add(student1);
+        assumeInDB.add(student2);
         for (Student s : notAdded) {
             assertTrue(assumeInDB.contains(s));
         }
-    }
-
-    @Test
-    public void updateStudents() {
-        List<Student> notAdded = studentService.updateStudents(studentsList);
-        List<Student> assumeNotInDB = new ArrayList<>();
-        assumeNotInDB.add(student3);
-        for (Student s : notAdded) {
-            assertTrue(assumeNotInDB.contains(s));
-        }
+        studentsList.add(student3);
+        assertThrows(ServiceException.class, () ->  studentService.updateStudents(studentsList));
     }
 
 
     @Test
-    public void addAndDeleteActivityStudent() {
-        assertTrue(studentService.addStudentActivity(sID1, activityId));
-        assertFalse(studentService.addStudentActivity(missingID, activityId));
-        assertFalse(studentService.addStudentActivity(sID1, activityInGroupId));
-        assertTrue(studentService.deleteStudentActivity(sID1, activityId));
-        assertFalse(studentService.deleteStudentActivity(missingID, activityId));
+    public void addAndDeleteActivityStudent() throws ServiceException {
+        assertEquals(studentService.addStudentActivity(activity, sID1),activity );
+        assertThrows(ServiceException.class, () -> studentService.addStudentActivity(activityInDb, missingID));
+        assertThrows(ServiceException.class, () ->studentService.addStudentActivity(activityInGroup, sID1));
+        assertEquals(studentService.deleteStudentActivity(activity.getId(), sID1), activity.getId());
+        assertThrows(ServiceException.class, () ->studentService.deleteStudentActivity(activity.getId(), missingID));
     }
 
 

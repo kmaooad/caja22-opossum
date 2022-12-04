@@ -90,18 +90,19 @@ public class UpdateGroupDialog extends DialogHandler {
     public boolean isApplicable(UserRequest request) {
         return request.getUserSession().getDialogState().equals(getDialogType());
     }
-
+    //todo
+    // take off comment
     @Override
     protected void finishActions(UserRequest dispatchRequest) {
         log.warn("AddGroupDialog finish actions: " + dispatchRequest.getUserSession().getData().get("group"));
         Group group = (Group) dispatchRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
-        if (groupService.updateGroup(group)) {
+        /*if (groupService.updateGroup(group)) {
             log.info("Successfully update group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), String.format(GroupConstants.SUCCESSFULLY_UPDATED, GroupConstants.groupToString(group)));
         } else {
             log.error("Cannot update group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.ERROR_WHILE_UPDATE);
-        }
+        }*/
         dispatchRequest.getUserSession().setDialogState(null);
         //Go back to the group menu
         dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);

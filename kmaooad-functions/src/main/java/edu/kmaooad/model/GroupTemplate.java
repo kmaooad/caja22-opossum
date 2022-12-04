@@ -19,7 +19,8 @@ public class GroupTemplate {
     @Id
     String id;
 
+
+    String name;
     Integer grade;
     Integer year;
-    String name;
 }

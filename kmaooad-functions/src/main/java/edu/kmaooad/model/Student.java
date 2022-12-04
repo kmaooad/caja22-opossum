@@ -24,5 +24,5 @@ public class Student {
     String groupId;
     String department;
     String email;
-    List<String> activities = new ArrayList<>();
+    List<Activity> activities = new ArrayList<>();
 }
