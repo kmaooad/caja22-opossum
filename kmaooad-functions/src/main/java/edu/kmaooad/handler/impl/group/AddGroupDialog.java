@@ -65,18 +65,19 @@ public class AddGroupDialog extends DialogHandler {
     public boolean isApplicable(UserRequest request) {
         return request.getUserSession().getDialogState().equals(getDialogType());
     }
-
+    //todo
+    // take off comment
     @Override
     protected void finishActions(UserRequest dispatchRequest) {
         log.warn("AddGroupDialog finish actions: " + dispatchRequest.getUserSession().getData().get("group"));
         Group group = (Group) dispatchRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
-        if (groupService.addGroup(group)) {
+      /*  if (groupService.addGroup(group)) {
             log.info("Successfully added group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.SUCCESSFULLY_ADDED);
         } else {
             log.error("Cannot add group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.ERROR_WHILE_ADD);
-        }
+        }*/
         dispatchRequest.getUserSession().setDialogState(null);
         //Go back to the group menu
         dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);

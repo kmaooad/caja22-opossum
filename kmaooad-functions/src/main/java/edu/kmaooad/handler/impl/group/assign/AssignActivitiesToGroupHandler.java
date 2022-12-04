@@ -43,19 +43,20 @@ public class AssignActivitiesToGroupHandler implements UserRequestHandler {
         return UserRequestHandler.isTextMessage(userRequest.getUpdate()) &&
                 userRequest.getUserSession().getConversationState().equals(ConversationState.WAITING_FOR_GROUP_ACTIVITY_ASSIGN_CHOICE);
     }
-
+    //todo
+    // take off comment
     @Override
     public HandlerResponse handle(UserRequest userRequest) {
         Group group = (Group) userRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
         String text = userRequest.getUpdate().getMessage().getText();
-        if(text.contains(ASSIGNED)) {
+       /* if(text.contains(ASSIGNED)) {
             String activityName = text.replace(ASSIGNED, "").trim();
             Activity activity = activityService.getActivityByName(activityName);
             groupService.deleteActivityGroup(activity.getId(), group.getId());
         } else {
             Activity activity = activityService.getActivityByName(text);
             groupService.addActivityGroup(activity.getId(), group.getId());
-        }
+        }*/
 
         userRequest.getUserSession().getData().put(GROUP_MAP_KEY, groupService.getGroupById(group.getId()));
         userRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_GROUP_TO_ASSIGN_CHOICE);

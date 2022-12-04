@@ -51,17 +51,18 @@ public class DeleteGroupDialog extends DialogHandler {
     public boolean isApplicable(UserRequest request) {
         return request.getUserSession().getDialogState().equals(getDialogType());
     }
-
+    //todo
+    // take off comment
     @Override
     protected void finishActions(UserRequest dispatchRequest) {
         Group group = (Group) dispatchRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
-        if (groupService.deleteGroup(group.getId())) {
+       /* if (groupService.deleteGroup(group.getId())) {
             log.info("Successfully deleted group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), String.format(GroupConstants.SUCCESSFULLY_DELETED, GroupConstants.groupToString(group)));
         } else {
             log.error("Cannot delete group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.ERROR_WHILE_DELETE);
-        }
+        }*/
         dispatchRequest.getUserSession().setDialogState(null);
         //Go back to the group menu
         dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);

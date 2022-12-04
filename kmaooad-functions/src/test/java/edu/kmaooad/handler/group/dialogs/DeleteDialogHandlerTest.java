@@ -84,7 +84,8 @@ public class DeleteDialogHandlerTest {
         userSession.setDialogState(DialogState.UPDATE_GROUP);
         Assertions.assertFalse(deleteGroupDialog.isApplicable(userRequest));
     }
-
+    //todo
+    // take off comment
     @Test
     public void testFinishActionsSuccessfulGroupDelete(){
         final String message = "Dialog finish actions true";
@@ -95,14 +96,15 @@ public class DeleteDialogHandlerTest {
         userSession.getData().put("group", group);
 
         Mockito.when(getGroupIDHandler.handle(Mockito.any(UserRequest.class))).thenReturn(new HandlerResponse(res, true));
-        Mockito.when(groupService.deleteGroup(Mockito.anyString())).thenReturn(true);
+      //  Mockito.when(groupService.deleteGroup(Mockito.anyString())).thenReturn(true);
 
         HandlerResponse response = deleteGroupDialog.handle(userRequest);
 
         Assertions.assertTrue(response.isSuccess());
         Assertions.assertEquals(response.getResult(), res);
     }
-
+    //todo
+    // take off comment
     @Test
     public void testFinishActionsUnsuccessfulGroupDelete(){
         final String message = "Dialog finish actions false";
@@ -113,7 +115,7 @@ public class DeleteDialogHandlerTest {
         userSession.getData().put("group", group);
 
         Mockito.when(getGroupIDHandler.handle(Mockito.any(UserRequest.class))).thenReturn(new HandlerResponse(res, true));
-        Mockito.when(groupService.deleteGroup(Mockito.anyString())).thenReturn(false);
+      //  Mockito.when(groupService.deleteGroup(Mockito.anyString())).thenReturn(false);
 
         HandlerResponse response = deleteGroupDialog.handle(userRequest);
 

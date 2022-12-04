@@ -1,9 +1,11 @@
 package edu.kmaooad;
 
 
+import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.service.GroupService;
+import edu.kmaooad.service.ServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +19,7 @@ import org.mockito.quality.Strictness;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -37,7 +38,7 @@ public class GroupServiceTest {
     final String missingID = "2";
     final Optional<Group> missingGroup = Optional.empty();
     final String student1ID = "1";
-    final String activity1ID = "1";
+    final Activity activity = new Activity();
 
     @BeforeEach
     public void initTest() {
@@ -46,49 +47,52 @@ public class GroupServiceTest {
         group1.setName("group1");
         group1.setYear(2022);
         group1.setGrade(1);
+
+        activity.setId("1");
         Mockito.doReturn(Optional.of(group1)).when(groupRepository).findById(group1ID);
         Mockito.doReturn(missingGroup).when(groupRepository).findById(missingID);
     }
 
     @Test
-    public void addGroup() {
-        System.out.println(groupService.addGroup(group1));
-        assertTrue(groupService.addGroup(group1));
+    public void addGroup() throws ServiceException {
+        assertEquals(groupService.addGroup(group1), group1);
         Mockito.doReturn(group1).when(groupRepository).findByName(group1Name);
-        assertFalse(groupService.addGroup(group1));
+        assertThrows(ServiceException.class, () -> groupService.addGroup(group1));
+    }
+
+   @Test
+    public void updateGroup() throws ServiceException {
+
+            group1.setName("group2");
+            group1.setYear(2023);
+            group1.setGrade(2);
+            assertEquals(groupService.updateGroup(group1), group1);
+            Group group2 = new Group();
+            group2.setId(missingID);
+            assertThrows(ServiceException.class, () ->groupService.updateGroup(group2));
+
     }
 
     @Test
-    public void updateGroup() {
-        group1.setName("group2");
-        group1.setYear(2023);
-        group1.setGrade(2);
-        assertTrue(groupService.updateGroup(group1));
-        Group group2 = new Group();
-        group2.setId(missingID);
-        assertFalse(groupService.updateGroup(group2));
+    public void deleteGroup() throws ServiceException {
+        assertEquals(group1ID, groupService.deleteGroup(group1ID).getId());
+        assertThrows(ServiceException.class, () ->groupService.deleteGroup(missingID));
     }
 
     @Test
-    public void deleteGroup() {
-        assertTrue(groupService.deleteGroup(group1ID));
-        assertFalse(groupService.deleteGroup(missingID));
+    public void addAndDeleteStudentGroup() throws ServiceException {
+        assertEquals(groupService.addStudentGroup(student1ID, group1ID), student1ID);
+        assertThrows(ServiceException.class, () ->groupService.addStudentGroup(student1ID, group1ID));
+        assertEquals(groupService.deleteStudentGroup(student1ID, group1ID), student1ID);
+        assertThrows(ServiceException.class, () ->groupService.deleteStudentGroup(student1ID, group1ID));
     }
 
     @Test
-    public void addAndDeleteStudentGroup() {
-        assertTrue(groupService.addStudentGroup(student1ID, group1ID));
-        assertFalse(groupService.addStudentGroup(student1ID, group1ID));
-        assertTrue(groupService.deleteStudentGroup(student1ID, group1ID));
-        assertFalse(groupService.deleteStudentGroup(student1ID, group1ID));
-    }
-
-    @Test
-    public void addAndDeleteActivityGroup() {
-        assertTrue(groupService.addActivityGroup(activity1ID, group1ID));
-        assertFalse(groupService.addActivityGroup(activity1ID, group1ID));
-        assertTrue(groupService.deleteActivityGroup(activity1ID, group1ID));
-        assertFalse(groupService.deleteActivityGroup(activity1ID, group1ID));
+    public void addAndDeleteActivityGroup() throws ServiceException{
+        assertEquals(groupService.addActivityGroup(activity, group1ID), activity);
+        assertThrows(ServiceException.class, () ->groupService.addActivityGroup(activity, group1ID));
+       assertEquals(groupService.deleteActivityGroup(activity.getId(), group1ID), activity.getId());
+        assertThrows(ServiceException.class, () ->groupService.deleteActivityGroup(activity.getId(), group1ID));
     }
 
 
