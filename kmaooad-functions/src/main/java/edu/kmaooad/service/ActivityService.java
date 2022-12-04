@@ -24,6 +24,10 @@ public class ActivityService {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Autowired
+    private GroupService groupService;
+
+    private final String splitter = " || ";
 
     public List<Activity> getAllActivities() {
         return activityRepository.findAll();
