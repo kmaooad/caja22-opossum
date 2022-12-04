@@ -18,8 +18,6 @@ import java.util.Optional;
  * Azure Functions with HTTP Trigger.
  */
 public class TelegramWebhookHandler extends FunctionInvoker<Update, BotApiMethod<?>> {
-    @Autowired
-    private StudentsBot studentsBot;
     /**
      * This function listens at endpoint "/api/TelegramWebhook". To invoke it using
      * "curl" command in bash:

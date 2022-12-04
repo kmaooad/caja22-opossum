@@ -1,9 +1,12 @@
-package edu.kmaooad;
+package edu.kmaooad.handler;
 
 import edu.kmaooad.handler.impl.StartCommandHandler;
 import edu.kmaooad.helper.KeyboardHelper;
+import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
+import edu.kmaooad.model.UserSession;
 import edu.kmaooad.service.TelegramService;
+import edu.kmaooad.service.UserSessionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,12 +33,15 @@ public class StartCommandHandlerTest {
 
     private final KeyboardHelper keyboardHelper = new KeyboardHelper();
 
-    private static final UserRequest userRequest = UserRequest.builder().chatId(1L).build();
-
     @Spy
     private Message messageApplicable;
     private static final Update updateApplicable = new Update();
-    private static final UserRequest userRequestApplicable = UserRequest.builder().chatId(1L).update(updateApplicable).build();
+
+    private UserSessionService userSessionService = new UserSessionService();
+
+    private static final UserSession userSession = UserSession.builder().chatId(1L).build();
+    private static final UserRequest userRequest = UserRequest.builder().chatId(1L).userSession(userSession).build();
+    private static final UserRequest userRequestApplicable = UserRequest.builder().chatId(1L).userSession(userSession).update(updateApplicable).build();
 
     private static final UserRequest userRequestNotApplicable = UserRequest.builder().chatId(1L).update(new Update()).build();
 
@@ -46,19 +52,19 @@ public class StartCommandHandlerTest {
         MockitoAnnotations.openMocks(this);
         Mockito.doReturn(resultSendMessage).when(telegramService).sendMessage(Mockito.any(Long.class), Mockito.any(String.class), Mockito.any(ReplyKeyboard.class));
         Mockito.doReturn(resultSendMessage).when(telegramService).sendMessage(Mockito.any(Long.class), Mockito.any(String.class));
-
         Mockito.doReturn(true).when(messageApplicable).isCommand();
+
         messageApplicable.setText("/start");
         updateApplicable.setMessage(messageApplicable);
 
-        startHandler = new StartCommandHandler(telegramService, keyboardHelper);
+        startHandler = new StartCommandHandler(telegramService, keyboardHelper, userSessionService);
     }
 
     @Test
     public void startCommandHandlerTestHandle() {
-        BotApiMethod result = startHandler.handle(userRequest);
+        HandlerResponse result = startHandler.handle(userRequest);
 
-        Assertions.assertEquals(resultSendMessage, result);
+        Assertions.assertEquals(resultSendMessage, result.getResult());
     }
 
     @Test
@@ -69,10 +75,5 @@ public class StartCommandHandlerTest {
     @Test
     public void testIsNotApplicable(){
         Assertions.assertFalse(startHandler.isApplicable(userRequestNotApplicable));
-    }
-
-    @Test
-    public void shouldBeGlobal(){
-        Assertions.assertTrue(startHandler.isGlobal());
     }
 }

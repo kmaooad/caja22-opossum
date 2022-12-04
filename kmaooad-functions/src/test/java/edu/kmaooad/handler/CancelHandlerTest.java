@@ -1,9 +1,10 @@
-package edu.kmaooad;
+package edu.kmaooad.handler;
 
 import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.handler.impl.CancelHandler;
-import edu.kmaooad.handler.impl.StudentMenuHandler;
+import edu.kmaooad.handler.impl.StartCommandHandler;
 import edu.kmaooad.helper.KeyboardHelper;
+import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.model.UserSession;
 import edu.kmaooad.service.TelegramService;
@@ -24,44 +25,37 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class StudentMenuHandlerTest {
-    private StudentMenuHandler studentMenuHandler;
+public class CancelHandlerTest {
+    private CancelHandler cancelHandler;
 
     @Mock
-    private TelegramService telegramService;
-    private KeyboardHelper keyboardHelper = new KeyboardHelper();
-    private UserSessionService userSessionService = new UserSessionService();
+    private StartCommandHandler startCommandHandler;
 
     @BeforeEach
     public void initTests() {
         MockitoAnnotations.openMocks(this);
-        Mockito.doReturn(null).when(telegramService).sendMessage(Mockito.any(Long.class), Mockito.any(String.class), Mockito.any(ReplyKeyboard.class));
-        studentMenuHandler = new StudentMenuHandler(telegramService, keyboardHelper, userSessionService);
+        Mockito.doReturn(null).when(startCommandHandler).handle(Mockito.any(UserRequest.class));
+        cancelHandler = new CancelHandler(startCommandHandler);
     }
 
     @Test
     public void testHandleMethod() {
-        UserSession session = UserSession.builder().state(ConversationState.WAITING_FOR_TEXT).build();
-        studentMenuHandler.handle(UserRequest.builder().userSession(session).build());
+        UserSession session = UserSession.builder().conversationState(ConversationState.WAITING_FOR_TEXT).build();
+        cancelHandler.handle(UserRequest.builder().userSession(session).build());
 
-        Assertions.assertEquals(session.getState(), ConversationState.WAITING_FOR_CHOICE);
+        Assertions.assertEquals(session.getConversationState(), ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
     }
 
     @Test
     public void testIsApplicable(){
         Message messageApplicable = new Message();
-        messageApplicable.setText(StudentMenuHandler.STUDENTS_MAIN);
+        messageApplicable.setText("❌ Скасувати");
 
         Update updateApplicable = new Update();
         updateApplicable.setMessage(messageApplicable);
 
         UserRequest userRequestApplicable = UserRequest.builder().chatId(1L).update(updateApplicable).build();
 
-        Assertions.assertTrue(studentMenuHandler.isApplicable(userRequestApplicable));
-    }
-
-    @Test
-    public void shouldBeGlobal(){
-        Assertions.assertTrue(studentMenuHandler.isGlobal());
+        Assertions.assertTrue(cancelHandler.isApplicable(userRequestApplicable));
     }
 }

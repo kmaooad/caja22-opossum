@@ -65,7 +65,7 @@ public class StudentsBot extends SpringWebhookBot {
                     .chatId(chatId)
                     .build();
 
-            BotApiMethod<?> dispatched = dispatcher.dispatch(userRequest);
+            BotApiMethod<?> dispatched = dispatcher.dispatch(userRequest).getResult();
 
             return dispatched;
         } else{

@@ -1,5 +1,7 @@
-package edu.kmaooad;
+package edu.kmaooad.telegram;
 
+import edu.kmaooad.Dispatcher;
+import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.service.UserSessionService;
 import edu.kmaooad.telegram.StudentsBot;
@@ -23,7 +25,7 @@ public class StudentsBotTest {
         when(telegramConfig.getWebhookPath()).thenReturn("https://test-webhook.com");
 
         Dispatcher dispatcher = mock(Dispatcher.class);
-        when(dispatcher.dispatch(any(UserRequest.class))).thenReturn(null);
+        when(dispatcher.dispatch(any(UserRequest.class))).thenReturn(new HandlerResponse(null, false));
 
         UserSessionService userSessionService = new UserSessionService();
         StudentsBot studentsBot = new StudentsBot(telegramConfig, dispatcher, userSessionService);

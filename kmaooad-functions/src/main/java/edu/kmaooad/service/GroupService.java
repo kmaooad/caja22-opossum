@@ -3,6 +3,7 @@ package edu.kmaooad.service;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.Student;
 import edu.kmaooad.repositories.GroupRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +12,29 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
+
+    //Get all groups from db
+    public List<Group> getAllGroups(){
+        return groupRepository.findAll();
+    }
+
+    /**
+     * @param id id of the group.
+     * @return group with passed id, null - if not found.
+     */
+    public Group getGroupById(String id){
+        Optional<Group> group = groupRepository.findById(id);
+        if(group.isPresent()){
+            return group.get();
+        } else {
+            log.warn("Group not found, id: " + id);
+            return null;
+        }
+    }
 
     // приймає валідну групу
     // повертає тру якщо додано
@@ -37,6 +58,8 @@ public class GroupService {
         if (group.isPresent()) {
             Group groupFound = group.get();
             groupFound.setName(groupUpdate.getName());
+            groupFound.setGrade(groupUpdate.getGrade());
+            groupFound.setYear(groupUpdate.getYear());
             groupRepository.save(groupFound);
             return true;
         }
