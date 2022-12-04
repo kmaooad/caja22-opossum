@@ -57,8 +57,6 @@ public class DeleteGroupDialog extends DialogHandler {
     @Override
     protected void finishActions(UserRequest dispatchRequest) {
         Group group = (Group) dispatchRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
-
-
         try {
             groupService.deleteGroup(group.getId());
             log.info("Successfully deleted group: " + group);
