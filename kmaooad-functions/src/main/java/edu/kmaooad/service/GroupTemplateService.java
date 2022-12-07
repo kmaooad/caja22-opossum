@@ -6,12 +6,18 @@ import edu.kmaooad.repositories.GroupTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class GroupTemplateService {
     @Autowired
     private GroupTemplateRepository groupTemplateRepository;
+
+    // Get all templates from db
+    public List<GroupTemplate> getAllTemplates(){
+        return groupTemplateRepository.findAll();
+    }
 
     /**
      * @param groupTemplate  - group template to add
