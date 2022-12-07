@@ -70,6 +70,8 @@ public class GroupTemplateServiceTest {
 
     @Test
     public void addGroup() throws ServiceException {
+        GroupTemplate group = new GroupTemplate();
+        assertThrows(ServiceException.class, () -> groupTemplateService.addGroupTemplate(group));
         assertEquals(group1,groupTemplateService.addGroupTemplate(group1));
         Mockito.doReturn(group1).when(groupTemplateRepository).findByNameAndYearAndGrade(group1.getName(), group1.getYear(),group1.getGrade());
         assertThrows(ServiceException.class, () -> groupTemplateService.addGroupTemplate(group1));

@@ -25,6 +25,10 @@ public class GroupTemplateService {
      */
     public GroupTemplate addGroupTemplate(GroupTemplate groupTemplate) throws ServiceException {
 
+        if(groupTemplate.getName()==null&&groupTemplate.getYear() == null&& groupTemplate.getGrade()==null){
+            throw new ServiceException("Failed to add group template: "+groupTemplate + " all fields are null");
+
+        }
         if (null == groupTemplateRepository.findByNameAndYearAndGrade(groupTemplate.getName(), groupTemplate.getYear(), groupTemplate.getGrade())){
             groupTemplateRepository.save(groupTemplate);
             return groupTemplate;
