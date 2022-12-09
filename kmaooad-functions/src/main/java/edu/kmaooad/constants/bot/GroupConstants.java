@@ -42,7 +42,7 @@ public class GroupConstants {
 
     public static final String GROUP_SHOW_ALL_ASSIGN_LABEL = "Додати активність до групи";
 
-    public static final CharSequence ASSIGNED = "[ДОДАНО]";
+    public static final String ASSIGNED = "[ДОДАНО]";
 
     public static String groupToString(Group group){
         return String.format(SHOW_FULL_GROUP, group.getName(), group.getId(), group.getGrade(), group.getYear());
