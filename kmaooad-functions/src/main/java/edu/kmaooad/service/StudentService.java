@@ -21,8 +21,11 @@ public class StudentService {
 
 
     // приймає список унікальних валідних студентів
-    // повертає недоданих студентів
-    public List<Student> addStudents(List<Student> students) {
+    /**
+     * @param students  - list of students to add
+     * @return added students updated, if at least one already exists - throws exception
+     */
+    public List<Student> addStudents(List<Student> students) throws ServiceException {
 
         List<Student> studentsAdded = new ArrayList<>();
         List<Student> studentsNotAdded = new ArrayList<>();
@@ -32,17 +35,21 @@ public class StudentService {
                 studentsAdded.add(s);
 
             } else {
-                studentsNotAdded.add(s);
+                throw new ServiceException("Failed to add students: contains student "+s + " already exists in database");
             }
         }
         studentRepository.saveAll(studentsAdded);
-        return studentsNotAdded;
+        return studentsAdded;
     }
 
 
-    // повертає true якщо актівіті додано
 // не додає якщо в групі студента вже є ця активність
-    public boolean addStudentActivity(String studentId, String activityId) {
+    /**
+     * @param activityAdd  - activity  to add
+     * @param studentId  - student id to add to
+     * @return activity added, if student not found or activity exists in this student - throws exception
+     */
+    public String addStudentActivity( String activityAdd,String studentId) throws ServiceException {
 
         Optional<Student> student = studentRepository.findById(studentId);
 
@@ -50,8 +57,9 @@ public class StudentService {
             Student studentPresent = student.get();
             List<String> activities = studentPresent.getActivities();
             for (String a : activities) {
-                if (a.equals(activityId)) {
-                    return false;
+                if (a.equals(activityAdd)) {
+                    throw new ServiceException("Failed to add activity: "+activityAdd+" to student with id: "+studentId + " activity witch such id exists in this student in database");
+
                 }
             }
             Optional<Group> group = groupRepository.findById(studentPresent.getGroupId());
@@ -59,20 +67,26 @@ public class StudentService {
                 Group groupPresent = group.get();
                 List<String> activitiesInGroup = groupPresent.getActivities();
                 for (String a : activitiesInGroup) {
-                    if (a.equals(activityId)) {
-                        return false;
+                    if (a.equals(activityAdd)) {
+                        throw new ServiceException("Failed to add activity: "+activityAdd+" to student with id: "+studentId + " student is assigned group with such activity");
+
                     }
                 }
             }
-            studentPresent.getActivities().add(activityId);
+            studentPresent.getActivities().add(activityAdd);
             studentRepository.save(studentPresent);
-            return true;
+            return activityAdd;
         }
-        return false;
+        throw new ServiceException("Failed to add activity: "+activityAdd+" to student with id: "+studentId + " student with such id doesn`t exist in database");
+
     }
 
-    // повертає true якщо актівіті видалено
-    public boolean deleteStudentActivity(String studentId, String activityId) {
+    /**
+     * @param activityId  - activity id to delete
+     * @param studentId  - student id to add to
+     * @return activity id deleted, if student not found or activity doesn`t exist in this student - throws exception
+     */
+    public String deleteStudentActivity(String activityId, String studentId) throws ServiceException {
         Optional<Student> student = studentRepository.findById(studentId);
         if (student.isPresent()) {
             Student studentPresent = student.get();
@@ -84,20 +98,27 @@ public class StudentService {
                 }
             }
             if (activityFound == null) {
-                return false;
+                throw new ServiceException("Failed to add activity with id: "+activityId+" to student with id: "+studentId + "activity witch such id doesn`t exist in this student in database");
             }
             activities.remove(activityFound);
             studentPresent.setActivities(activities);
             studentRepository.save(studentPresent);
-            return true;
+            return activityId;
         }
-        return false;
+        throw new ServiceException("Failed to delete activity with: "+activityId+" to student with id: "+studentId + " student with such id doesn`t exist in database");
+
     }
 
 
     // приймає список унікальних валідних студентів
-    // повертає неапдейтнутих студентів
-    public List<Student> updateStudents(List<Student> students) {
+    // повертає апдейтнутих студентів
+
+
+    /**
+     * @param students  - list of students to update
+     * @return added students updated, if at least one doesn`t exists - throws exception
+     */
+    public List<Student> updateStudents(List<Student> students) throws ServiceException {
         List<Student> updatedStudents = new ArrayList<>();
         List<Student> notUpdatedStudents = new ArrayList<>();
         for (Student s : students) {
@@ -113,12 +134,13 @@ public class StudentService {
                     updatedStudents.add(s);
                 }
             } else {
-                notUpdatedStudents.add(s);
+                throw new ServiceException("Failed to update students: contains student "+s + " doesn`t exists in database");
+
             }
 
         }
         studentRepository.saveAll(updatedStudents);
-        return notUpdatedStudents;
+        return updatedStudents;
     }
 
 }
