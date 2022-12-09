@@ -73,13 +73,22 @@ public class KeyboardHelper {
         keyboardRow2.add(GroupConstants.GROUP_SHOW_ALL_BUTTON_LABEL);
 
         KeyboardRow keyboardRow3 = new KeyboardRow();
-        keyboardRow3.add(GlobalConstants.CANCEL_BUTTON_LABEL);
+        keyboardRow3.add(GroupConstants.GROUP_SHOW_ALL_ASSIGN_LABEL);
+
+        KeyboardRow keyboardRow4 = new KeyboardRow();
+        keyboardRow4.add(GlobalConstants.CANCEL_BUTTON_LABEL);
 
         return ReplyKeyboardMarkup.builder()
-                .keyboard(List.of(keyboardRow1, keyboardRow2, keyboardRow3))
+                .keyboard(List.of(keyboardRow1, keyboardRow2, keyboardRow3, keyboardRow4))
                 .selective(true)
                 .resizeKeyboard(true)
                 .oneTimeKeyboard(false)
                 .build();
+    }
+
+    public ReplyKeyboardMarkup buildAdditionalActionsVertical(List<String> statusOfActivitiesForGroup) {
+
+
+        return null;
     }
 }
