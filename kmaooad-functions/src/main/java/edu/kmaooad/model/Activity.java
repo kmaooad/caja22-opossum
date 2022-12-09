@@ -17,5 +17,7 @@ public class Activity {
     @Id
     String id;
     String name;
-    Date date;
+    Date startDate;
+    Date endDate;
+    String status;
 }
