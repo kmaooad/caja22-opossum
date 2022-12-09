@@ -124,14 +124,14 @@ public class GroupService {
      * @param groupId  - group id to add to
      * @return activity added, if group not found or activity exists in this group - throws exception
      */
-    public Activity addActivityGroup(Activity activityAdd, String groupId) throws ServiceException {
+    public String addActivityGroup(String activityAdd, String groupId) throws ServiceException {
         Optional<Group> group = groupRepository.findById(groupId);
         if (group.isPresent()) {
             Group groupPresent = group.get();
-            List<Activity> activities = groupPresent.getActivities();
-            Activity activityFound = null;
-            for (Activity a : activities) {
-                if (a.getId().equals(activityAdd.getId())) {
+            List<String> activities = groupPresent.getActivities();
+            String activityFound = null;
+            for (String a : activities) {
+                if (a.equals(activityAdd)) {
                     activityFound = a;
                 }
             }
@@ -185,10 +185,10 @@ public class GroupService {
         Optional<Group> group = groupRepository.findById(groupId);
         if (group.isPresent()) {
             Group groupPresent = group.get();
-            List<Activity> activities = groupPresent.getActivities();
-            Activity activityFound = null;
-            for (Activity a : activities) {
-                if (a.getId().equals(activityDelete)) {
+            List<String> activities = groupPresent.getActivities();
+            String activityFound = null;
+            for (String a : activities) {
+                if (a.equals(activityDelete)) {
                     activityFound = a;
                 }
             }

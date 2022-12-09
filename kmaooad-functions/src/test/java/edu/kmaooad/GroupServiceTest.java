@@ -89,8 +89,8 @@ public class GroupServiceTest {
 
     @Test
     public void addAndDeleteActivityGroup() throws ServiceException{
-        assertEquals(groupService.addActivityGroup(activity, group1ID), activity);
-        assertThrows(ServiceException.class, () ->groupService.addActivityGroup(activity, group1ID));
+        assertEquals(groupService.addActivityGroup(activity.getId(), group1ID), activity.getId());
+        assertThrows(ServiceException.class, () ->groupService.addActivityGroup(activity.getId(), group1ID));
        assertEquals(groupService.deleteActivityGroup(activity.getId(), group1ID), activity.getId());
         assertThrows(ServiceException.class, () ->groupService.deleteActivityGroup(activity.getId(), group1ID));
     }

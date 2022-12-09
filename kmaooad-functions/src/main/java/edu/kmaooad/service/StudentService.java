@@ -49,15 +49,15 @@ public class StudentService {
      * @param studentId  - student id to add to
      * @return activity added, if student not found or activity exists in this student - throws exception
      */
-    public Activity addStudentActivity( Activity activityAdd,String studentId) throws ServiceException {
+    public String addStudentActivity( String activityAdd,String studentId) throws ServiceException {
 
         Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isPresent()) {
             Student studentPresent = student.get();
-            List<Activity> activities = studentPresent.getActivities();
-            for (Activity a : activities) {
-                if (a.getId().equals(activityAdd.getId())) {
+            List<String> activities = studentPresent.getActivities();
+            for (String a : activities) {
+                if (a.equals(activityAdd)) {
                     throw new ServiceException("Failed to add activity: "+activityAdd+" to student with id: "+studentId + " activity witch such id exists in this student in database");
 
                 }
@@ -65,9 +65,9 @@ public class StudentService {
             Optional<Group> group = groupRepository.findById(studentPresent.getGroupId());
             if (group.isPresent()) {
                 Group groupPresent = group.get();
-                List<Activity> activitiesInGroup = groupPresent.getActivities();
-                for (Activity a : activitiesInGroup) {
-                    if (a.getId().equals(activityAdd.getId())) {
+                List<String> activitiesInGroup = groupPresent.getActivities();
+                for (String a : activitiesInGroup) {
+                    if (a.equals(activityAdd)) {
                         throw new ServiceException("Failed to add activity: "+activityAdd+" to student with id: "+studentId + " student is assigned group with such activity");
 
                     }
@@ -90,10 +90,10 @@ public class StudentService {
         Optional<Student> student = studentRepository.findById(studentId);
         if (student.isPresent()) {
             Student studentPresent = student.get();
-            List<Activity> activities = studentPresent.getActivities();
-            Activity activityFound = null;
-            for (Activity a : activities) {
-                if (a.getId().equals(activityId)) {
+            List<String> activities = studentPresent.getActivities();
+            String activityFound = null;
+            for (String a : activities) {
+                if (a.equals(activityId)) {
                     activityFound = a;
                 }
             }
