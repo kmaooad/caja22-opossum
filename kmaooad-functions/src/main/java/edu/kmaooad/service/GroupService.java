@@ -17,7 +17,7 @@ public class GroupService {
     private GroupRepository groupRepository;
 
     //Get all groups from db
-    public List<Group> getAllGroups(){
+    public List<Group> getAllGroups() {
         return groupRepository.findAll();
     }
 
@@ -25,9 +25,9 @@ public class GroupService {
      * @param id id of the group.
      * @return group with passed id, null - if not found.
      */
-    public Group getGroupById(String id){
+    public Group getGroupById(String id) {
         Optional<Group> group = groupRepository.findById(id);
-        if(group.isPresent()){
+        if (group.isPresent()) {
             return group.get();
         } else {
             log.warn("Group not found, id: " + id);
@@ -35,17 +35,26 @@ public class GroupService {
         }
     }
 
+    public Group getGroupByName(String name) {
+        Optional<Group> group = groupRepository.findByName(name);
+        if (group.isPresent()) {
+            return group.get();
+        } else {
+            log.warn("Group not found, name: " + name);
+            return null;
+        }
+    }
+
     /**
-     * @param group  - group to add
+     * @param group - group to add
      * @return group added, if already exists in database - throws exception
      */
     public Group addGroup(Group group) throws ServiceException {
 
-        Group found = groupRepository.findByName(group.getName());
+        Optional<Group> found = groupRepository.findByName(group.getName());
 
-        if (found != null) {
-                throw new ServiceException("Failed to add group: "+group + " group with such values exists in database");
-
+        if (found.isPresent()) {
+            throw new ServiceException("Failed to add group: " + group + " group with such values exists in database");
         } else {
             groupRepository.save(group);
             return group;
@@ -53,7 +62,7 @@ public class GroupService {
     }
 
     /**
-     * @param groupUpdate  - group to update
+     * @param groupUpdate - group to update
      * @return group updated, if not found - throws exception
      */
     public Group updateGroup(Group groupUpdate) throws ServiceException {
@@ -65,14 +74,14 @@ public class GroupService {
             groupFound.setYear(groupUpdate.getYear());
             groupRepository.save(groupFound);
             return groupUpdate;
-        }else{
-            throw new ServiceException("Failed to update group: "+group + " group with such id does not exists in database");
+        } else {
+            throw new ServiceException("Failed to update group: " + group + " group with such id does not exists in database");
         }
     }
 
 
     /**
-     * @param groupId  - group to add
+     * @param groupId - group to add
      * @return group deleted, if not found - throws exception
      */
     public Group deleteGroup(String groupId) throws ServiceException {
@@ -82,7 +91,7 @@ public class GroupService {
             groupRepository.delete(groupFound);
             return groupFound;
         }
-        throw new ServiceException("Failed to delete group with id: "+groupId + " group with such id does not exists in database");
+        throw new ServiceException("Failed to delete group with id: " + groupId + " group with such id does not exists in database");
 
     }
 
@@ -91,8 +100,8 @@ public class GroupService {
     // нема перевірки чи такий студент є в бд !!!!
 
     /**
-     * @param studentId  - student id to add
-     * @param groupId  - group id to add to
+     * @param studentId - student id to add
+     * @param groupId   - group id to add to
      * @return student id added, if group not found or student exists in this group - throws exception
      */
     public String addStudentGroup(String studentId, String groupId) throws ServiceException {
@@ -107,7 +116,7 @@ public class GroupService {
                 }
             }
             if (studentFound != null) {
-                throw new ServiceException("Failed to add student with id: "+studentId+" to group with id: "+groupId + " student witch such id exists in this group in database");
+                throw new ServiceException("Failed to add student with id: " + studentId + " to group with id: " + groupId + " student witch such id exists in this group in database");
 
             }
             students.add(studentId);
@@ -115,13 +124,13 @@ public class GroupService {
             groupRepository.save(groupPresent);
             return studentId;
         }
-        throw new ServiceException("Failed to add student with id: "+studentId+" to group with id: "+groupId + " group with such id doesn`t exist in database");
+        throw new ServiceException("Failed to add student with id: " + studentId + " to group with id: " + groupId + " group with such id doesn`t exist in database");
 
     }
 
     /**
-     * @param activityAdd  - activity  to add
-     * @param groupId  - group id to add to
+     * @param activityAdd - activity  to add
+     * @param groupId     - group id to add to
      * @return activity added, if group not found or activity exists in this group - throws exception
      */
     public Activity addActivityGroup(Activity activityAdd, String groupId) throws ServiceException {
@@ -136,7 +145,7 @@ public class GroupService {
                 }
             }
             if (activityFound != null) {
-                throw new ServiceException("Failed to add activity: "+activityAdd+" to group with id: "+groupId + " activity witch such id exists in this group in database");
+                throw new ServiceException("Failed to add activity: " + activityAdd + " to group with id: " + groupId + " activity witch such id exists in this group in database");
 
             }
             activities.add(activityAdd);
@@ -144,13 +153,13 @@ public class GroupService {
             groupRepository.save(groupPresent);
             return activityAdd;
         }
-        throw new ServiceException("Failed to add activity: "+activityAdd+" to group with id: "+groupId + " group with such id doesn`t exist in database");
+        throw new ServiceException("Failed to add activity: " + activityAdd + " to group with id: " + groupId + " group with such id doesn`t exist in database");
 
     }
 
     /**
-     * @param studentId  - student id to delete
-     * @param groupId  - group id to deleted from
+     * @param studentId - student id to delete
+     * @param groupId   - group id to deleted from
      * @return student id deleted, if group not found or student doesn`t exist in this group - throws exception
      */
     public String deleteStudentGroup(String studentId, String groupId) throws ServiceException {
@@ -165,20 +174,20 @@ public class GroupService {
                 }
             }
             if (studentFound == null) {
-                throw new ServiceException("Failed to delete student with id: "+studentId+" to group with id: "+groupId + " student witch such id doesn`t exist in this group in database");
+                throw new ServiceException("Failed to delete student with id: " + studentId + " to group with id: " + groupId + " student witch such id doesn`t exist in this group in database");
             }
             studentIds.remove(studentFound);
             groupPresent.setStudentIds(studentIds);
             groupRepository.save(groupPresent);
             return studentId;
         }
-        throw new ServiceException("Failed to delete student with id: "+studentId+" to group with id: "+groupId + " group with such id doesn`t exist in database");
+        throw new ServiceException("Failed to delete student with id: " + studentId + " to group with id: " + groupId + " group with such id doesn`t exist in database");
 
     }
 
     /**
-     * @param activityDelete  - activity id to delete
-     * @param groupId  - group id to deleted from
+     * @param activityDelete - activity id to delete
+     * @param groupId        - group id to deleted from
      * @return activity deleted, if group not found or activity doesn`t exist in this group - throws exception
      */
     public String deleteActivityGroup(String activityDelete, String groupId) throws ServiceException {
@@ -193,7 +202,7 @@ public class GroupService {
                 }
             }
             if (activityFound == null) {
-                throw new ServiceException("Failed to delete activity with id: "+activityDelete+" to group with id: "+groupId + " activity witch such id doesn`t exist in this group in database");
+                throw new ServiceException("Failed to delete activity with id: " + activityDelete + " to group with id: " + groupId + " activity witch such id doesn`t exist in this group in database");
 
             }
             activities.remove(activityFound);
@@ -201,7 +210,7 @@ public class GroupService {
             groupRepository.save(groupPresent);
             return activityDelete;
         }
-        throw new ServiceException("Failed to delete activity with with id: "+activityDelete+" to group with id: "+groupId + " group with such id doesn`t exist in database");
+        throw new ServiceException("Failed to delete activity with with id: " + activityDelete + " to group with id: " + groupId + " group with such id doesn`t exist in database");
 
     }
 

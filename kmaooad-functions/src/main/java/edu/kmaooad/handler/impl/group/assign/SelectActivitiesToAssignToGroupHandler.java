@@ -41,11 +41,11 @@ public class SelectActivitiesToAssignToGroupHandler implements ButtonRequestHand
 
     @Override
     public HandlerResponse handle(UserRequest userRequest) {
-        Group group = (Group) userRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
+        log.info(userRequest.toString());
+        Group group = groupService.getGroupByName(userRequest.getUpdate().getMessage().getText());
         ReplyKeyboardMarkup replyKeyboardMarkup = keyboardHelper.buildAdditionalActionsVertical(activityService.getStatusOfActivitiesForGroup(group));
         userRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_GROUP_TO_ASSIGN_CHOICE);
 
         return new HandlerResponse(telegramService.sendMessage(userRequest.getChatId(), "Оберіть активність яку хочете додати до " + group.getName() + " ⤵️", replyKeyboardMarkup), true);
-
     }
 }

@@ -7,8 +7,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import javax.validation.constraints.Max;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Helper class, allows to build keyboards for users
@@ -86,9 +88,21 @@ public class KeyboardHelper {
                 .build();
     }
 
-    public ReplyKeyboardMarkup buildAdditionalActionsVertical(List<String> statusOfActivitiesForGroup) {
+    public ReplyKeyboardMarkup buildAdditionalActionsVertical(List<String> options) {
 
+        List<KeyboardRow> rows = options.stream()
+                .map(option -> new KeyboardRow(List.of(new KeyboardButton(option))))
+                .collect(Collectors.toList());
 
-        return null;
+        KeyboardRow cancelRow = new KeyboardRow();
+        cancelRow.add(GlobalConstants.CANCEL_BUTTON_LABEL);
+        rows.add(0, cancelRow);
+
+        return ReplyKeyboardMarkup.builder()
+                .keyboard(rows)
+                .selective(true)
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(false)
+                .build();
     }
 }

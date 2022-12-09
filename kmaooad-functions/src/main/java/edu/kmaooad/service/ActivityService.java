@@ -34,7 +34,7 @@ public class ActivityService {
         List<Activity> allActivities = activityRepository.findAll();
         return allActivities.stream()
                 .map(activity -> {
-                    if (group.getActivities().contains(activity.getId())) {
+                    if (group.getActivities().contains(activity)) {
                         return activity.getName() + ASSIGNED;
                     } else return activity.getName();
                 })
