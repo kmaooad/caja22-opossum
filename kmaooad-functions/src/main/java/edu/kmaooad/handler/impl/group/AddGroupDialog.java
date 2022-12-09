@@ -9,6 +9,7 @@ import edu.kmaooad.model.Group;
 import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.service.GroupService;
+import edu.kmaooad.service.ServiceException;
 import edu.kmaooad.service.TelegramService;
 import edu.kmaooad.service.UserSessionService;
 import lombok.extern.slf4j.Slf4j;
@@ -71,13 +72,15 @@ public class AddGroupDialog extends DialogHandler {
     protected void finishActions(UserRequest dispatchRequest) {
         log.warn("AddGroupDialog finish actions: " + dispatchRequest.getUserSession().getData().get("group"));
         Group group = (Group) dispatchRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
-      /*  if (groupService.addGroup(group)) {
-            log.info("Successfully added group: " + group);
-            telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.SUCCESSFULLY_ADDED);
-        } else {
-            log.error("Cannot add group: " + group);
-            telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.ERROR_WHILE_ADD);
-        }*/
+       try {
+           groupService.addGroup(group);
+           log.info("Successfully added group: " + group);
+           telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.SUCCESSFULLY_ADDED);
+       } catch (ServiceException e) {
+           e.printStackTrace();
+           log.error("Cannot add group: " + group);
+           telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.ERROR_WHILE_ADD);
+       }
         dispatchRequest.getUserSession().setDialogState(null);
         //Go back to the group menu
         dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
