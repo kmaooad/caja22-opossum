@@ -4,7 +4,6 @@ import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.constants.bot.GroupTemplateConstants;
 import edu.kmaooad.handler.ButtonRequestHandler;
 import edu.kmaooad.handler.UserRequestHandler;
-import edu.kmaooad.handler.impl.group.GroupButtonsHandler;
 import edu.kmaooad.model.GroupTemplate;
 import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
@@ -21,12 +20,13 @@ public class ShowAllGroupTemplatesButtonHandler implements ButtonRequestHandler 
     private final GroupTemplateService templateService;
 
     private final TelegramService telegramService;
-    private final GroupButtonsHandler groupButtonsHandler;
+    private final TemplateButtonsHandler templateButtonsHandler;
 
-    public ShowAllGroupTemplatesButtonHandler(GroupTemplateService templateService, TelegramService telegramService, GroupButtonsHandler groupButtonsHandler) {
+    public ShowAllGroupTemplatesButtonHandler(GroupTemplateService templateService, TelegramService telegramService,
+                                              TemplateButtonsHandler templateButtonsHandler) {
         this.templateService = templateService;
         this.telegramService = telegramService;
-        this.groupButtonsHandler = groupButtonsHandler;
+        this.templateButtonsHandler = templateButtonsHandler;
     }
 
     @Override
@@ -42,10 +42,11 @@ public class ShowAllGroupTemplatesButtonHandler implements ButtonRequestHandler 
 
         for (GroupTemplate template : templates) {
             telegramService.sendMessage(dispatchRequest.getChatId(),
-                    String.format(GroupTemplateConstants.SHOW_FULL_GROUP_TEMPLATE, template.getName(), template.getGrade(), template.getYear()));
+                    String.format(GroupTemplateConstants.SHOW_GROUP_TEMPLATE,
+                            template.getName(), template.getGrade(), template.getYear()));
         }
 
         dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
-        return groupButtonsHandler.handle(dispatchRequest);
+        return templateButtonsHandler.handle(dispatchRequest);
     }
 }

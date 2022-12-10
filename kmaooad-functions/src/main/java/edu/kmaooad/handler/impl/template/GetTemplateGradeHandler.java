@@ -31,6 +31,8 @@ public class GetTemplateGradeHandler extends CommonRequestHandler {
             GroupTemplate template = (GroupTemplate) userSession.getData().get(GroupTemplateConstants.GROUP_TEMPLATE_MAP_KEY);
             if(messageText != "-") {
                 template.setGrade(Integer.parseInt(messageText));
+            } else {
+                template.setGrade(null);
             }
 
             return new HandlerResponse(null, true);

@@ -31,6 +31,8 @@ public class GetTemplateYearHandler extends CommonRequestHandler {
         try {
             if(messageText != "-") {
                 template.setYear(Integer.parseInt(messageText));
+            } else {
+                template.setYear(null);
             }
             return new HandlerResponse(null, true);
         } catch (Exception e) {

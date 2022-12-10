@@ -16,6 +16,8 @@ public class GetTemplateNameHandler extends CommonRequestHandler {
         String messageText = dispatchRequest.getUpdate().getMessage().getText();
         if(messageText != "-") {
             template.setName(messageText);
+        } else {
+            template.setName(null);
         }
 
         return new HandlerResponse(null, true);

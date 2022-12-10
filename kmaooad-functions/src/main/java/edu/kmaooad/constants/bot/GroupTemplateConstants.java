@@ -8,7 +8,12 @@ public class GroupTemplateConstants {
     public static final String GROUP_TEMPLATE_ADD_BUTTON_LABEL = "Додати";
     public static final String GROUP_TEMPLATE_SHOW_ALL_BUTTON_LABEL = "Показати всі шаблони груп";
 
-    public static final String SHOW_FULL_GROUP_TEMPLATE = "<b>%s</b>\n" +
+    public static final String SHOW_GROUP_TEMPLATE = "<b>%s</b>\n" +
+            "Grade: %s\n" +
+            "Year: %s";
+
+    public static final String SHOW_GROUP_TEMPLATE_WITH_ID = "<b>%s</b>\n" +
+            "Id: %s\n" +
             "Grade: %s\n" +
             "Year: %s";
 
