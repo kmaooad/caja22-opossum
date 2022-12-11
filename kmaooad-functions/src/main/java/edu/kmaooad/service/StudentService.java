@@ -33,7 +33,7 @@ public class StudentService {
         List<Student> studentsNotAdded = new ArrayList<>();
         for (Student s : students) {
             Optional<Student> found = studentRepository.findByEmail(s.getEmail());
-            if (found.isPresent()) {
+            if (found.isEmpty()) {
                 studentsAdded.add(s);
             } else {
                 throw new ServiceException("Failed to add students: contains student " + s + " already exists in database");

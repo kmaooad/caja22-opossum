@@ -56,7 +56,7 @@ public class GroupServiceTest {
     @Test
     public void addGroup() throws ServiceException {
         assertEquals(groupService.addGroup(group1), group1);
-        Mockito.doReturn(group1).when(groupRepository).findByName(group1Name);
+        Mockito.doReturn(Optional.of(group1)).when(groupRepository).findByName(group1Name);
         assertThrows(ServiceException.class, () -> groupService.addGroup(group1));
     }
 
