@@ -40,10 +40,6 @@ public class GroupConstants {
     public static final String SUCCESSFULLY_DELETED = "Групу успішно видалено";
     public static final String ERROR_WHILE_DELETE = "Не змогли видалити групу";
 
-    public static final String GROUP_SHOW_ALL_ASSIGN_LABEL = "Додати активність до групи";
-
-    public static final String ASSIGNED = "[ДОДАНО]";
-
     public static String groupToString(Group group){
         return String.format(SHOW_FULL_GROUP, group.getName(), group.getId(), group.getGrade(), group.getYear());
     }

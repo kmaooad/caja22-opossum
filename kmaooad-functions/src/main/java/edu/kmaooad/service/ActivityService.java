@@ -2,6 +2,7 @@ package edu.kmaooad.service;
 
 import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
+import edu.kmaooad.model.Student;
 import edu.kmaooad.repositories.ActivityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static edu.kmaooad.constants.bot.GroupConstants.ASSIGNED;
+import static edu.kmaooad.constants.bot.GlobalConstants.ASSIGNED;
 
 @Service
 @Slf4j
@@ -35,7 +36,18 @@ public class ActivityService {
         return allActivities.stream()
                 .map(activity -> {
                     if (group.getActivities().contains(activity.getId())) {
-                        return activity.getName() + " "  + ASSIGNED;
+                        return activity.getName() + " " + ASSIGNED;
+                    } else return activity.getName();
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getStatusOfActivitiesForStudent(Student student) {
+        List<Activity> allActivities = activityRepository.findAll();
+        return allActivities.stream()
+                .map(activity -> {
+                    if (student.getActivities().contains(activity.getId())) {
+                        return activity.getName() + " " + ASSIGNED;
                     } else return activity.getName();
                 })
                 .collect(Collectors.toList());

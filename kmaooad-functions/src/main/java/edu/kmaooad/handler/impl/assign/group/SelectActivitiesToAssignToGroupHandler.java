@@ -1,7 +1,6 @@
-package edu.kmaooad.handler.impl.group.assign;
+package edu.kmaooad.handler.impl.assign.group;
 
 import edu.kmaooad.constants.bot.ConversationState;
-import edu.kmaooad.constants.bot.GlobalConstants;
 import edu.kmaooad.constants.bot.GroupConstants;
 import edu.kmaooad.handler.ButtonRequestHandler;
 import edu.kmaooad.handler.UserRequestHandler;

@@ -1,4 +1,4 @@
-package edu.kmaooad.handler.impl.group.assign;
+package edu.kmaooad.handler.impl.assign.group;
 
 import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.constants.bot.GroupConstants;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
-import static edu.kmaooad.constants.bot.GroupConstants.ASSIGNED;
+import static edu.kmaooad.constants.bot.GlobalConstants.ASSIGNED;
 import static edu.kmaooad.constants.bot.GroupConstants.GROUP_MAP_KEY;
 
 @Component
@@ -49,7 +49,7 @@ public class AssignActivitiesToGroupHandler implements ButtonRequestHandler {
     public HandlerResponse handle(UserRequest userRequest) {
         Group group = (Group) userRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
         String text = userRequest.getUpdate().getMessage().getText();
-        log.info("Trying to assign/usassign activity " + text);
+        log.info("Trying to assign/unassign activity " + text + " from group");
         try {
             if (text.contains(ASSIGNED)) {
                 String activityName = text.replace(ASSIGNED, "").trim();

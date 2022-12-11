@@ -1,7 +1,7 @@
-package edu.kmaooad.handler.impl.group.assign;
+package edu.kmaooad.handler.impl.assign.group;
 
 import edu.kmaooad.constants.bot.ConversationState;
-import edu.kmaooad.constants.bot.GroupConstants;
+import edu.kmaooad.constants.bot.GlobalConstants;
 import edu.kmaooad.handler.ButtonRequestHandler;
 import edu.kmaooad.handler.UserRequestHandler;
 import edu.kmaooad.helper.KeyboardHelper;
@@ -34,8 +34,8 @@ public class SelectGroupToAssignHandler implements ButtonRequestHandler {
 
     @Override
     public boolean isApplicable(UserRequest userRequest) {
-        return UserRequestHandler.isTextMessage(userRequest.getUpdate(), GroupConstants.GROUP_SHOW_ALL_ASSIGN_LABEL) &&
-                userRequest.getUserSession().getConversationState().equals(ConversationState.WAITING_FOR_GROUP_ACTION_CHOICE);
+        return UserRequestHandler.isTextMessage(userRequest.getUpdate(), GlobalConstants.GROUP_SHOW_ALL_ASSIGN_LABEL) &&
+                userRequest.getUserSession().getConversationState().equals(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
     }
 
     @Override
