@@ -22,7 +22,7 @@ public class Group {
     Integer grade;
     Integer year;
 
-    List<Activity> activities = new ArrayList<>();
+    List<String> activities = new ArrayList<>();
     List<String> studentIds = new ArrayList<>();
     // айді студентів
 }

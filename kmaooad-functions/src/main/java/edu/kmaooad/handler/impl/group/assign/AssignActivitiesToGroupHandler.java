@@ -61,7 +61,7 @@ public class AssignActivitiesToGroupHandler implements UserRequestHandler {
                 log.info("Deleted activity " + activityName + " from group " + group.getName());
             } else {
                 Activity activity = activityService.getActivityByName(text);
-                groupService.addActivityGroup(activity, group.getId());
+                groupService.addActivityGroup(activity.getId(), group.getId());
                 log.info("Added activity " + activity.getName() + " to group " + group.getName());
             }
         } catch (ServiceException e) {

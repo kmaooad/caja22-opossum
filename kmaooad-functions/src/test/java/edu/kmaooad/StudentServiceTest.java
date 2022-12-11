@@ -80,7 +80,7 @@ public class StudentServiceTest {
         activityInGroup.setId(activityInGroupId);
         activity.setId(activityId);
         activityInDb.setId(activityInGroupId);
-        group1.getActivities().add(activityInDb);
+        group1.getActivities().add(activityInDb.getId());
         student1.setGroupId(group1ID);
         student2.setGroupId(group1ID);
         student3.setGroupId(group1ID);
@@ -124,9 +124,9 @@ public class StudentServiceTest {
 
     @Test
     public void addAndDeleteActivityStudent() throws ServiceException {
-        assertEquals(studentService.addStudentActivity(activity, sID1),activity );
-        assertThrows(ServiceException.class, () -> studentService.addStudentActivity(activityInDb, missingID));
-        assertThrows(ServiceException.class, () ->studentService.addStudentActivity(activityInGroup, sID1));
+        assertEquals(studentService.addStudentActivity(activity.getId(), sID1),activity.getId() );
+        assertThrows(ServiceException.class, () -> studentService.addStudentActivity(activityInDb.getId(), missingID));
+        assertThrows(ServiceException.class, () ->studentService.addStudentActivity(activityInGroup.getId(), sID1));
         assertEquals(studentService.deleteStudentActivity(activity.getId(), sID1), activity.getId());
         assertThrows(ServiceException.class, () ->studentService.deleteStudentActivity(activity.getId(), missingID));
     }

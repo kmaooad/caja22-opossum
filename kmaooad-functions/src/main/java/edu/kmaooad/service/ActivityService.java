@@ -51,5 +51,35 @@ public class ActivityService {
         }
     }
 
+    public List<Activity> updateActivities(List<Activity> activityList) throws ServiceException {
+        for (Activity a:activityList) {
+        Optional<Activity> activity = activityRepository.findById(a.getId());
+        if (activity.isPresent()) {
+            Activity activityFound = activity.get();
+            activityFound.setName( a.getName());
+            activityFound.setStatus( a.getStatus());
+            activityFound.setStartDate( a.getStartDate());
+            activityFound.setEndDate( a.getEndDate());
+            activityRepository.save(activityFound);
+        }else{
+            throw new ServiceException("Failed to update activity: "+activity + " activity with such id does not exists in database");
+        }
+        }
+        return activityList;
+    }
+
+    public Activity addActivity(Activity activity) throws ServiceException {
+
+        Optional<Activity> found = activityRepository.findByName(activity.getName());
+
+        if (found.isPresent()) {
+            throw new ServiceException("Failed to add activity: "+activity + " activity with such values exists in database");
+
+        } else {
+            activityRepository.save(activity);
+            return activity;
+        }
+    }
+
 
 }
