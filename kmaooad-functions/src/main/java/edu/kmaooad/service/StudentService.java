@@ -32,8 +32,9 @@ public class StudentService {
     private JavaMailSender mailSender;
 
     private void sendEmail(String email){
-        MimeMessage msg = mailSender.createMimeMessage();
+
         try {
+            MimeMessage msg = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);
         helper.setTo(email);
         helper.setSubject("Opossum bot");
@@ -44,6 +45,8 @@ public class StudentService {
         } catch (MessagingException e ) {
             e.printStackTrace();
         }catch (MailSendException e ) {
+            e.printStackTrace();
+        }catch (NullPointerException e){
             e.printStackTrace();
         }
 
@@ -65,7 +68,7 @@ public class StudentService {
             }
         }
         for (Student s : students) {
-            sendEmail(s.getEmail());
+                sendEmail(s.getEmail());
         }
         studentRepository.saveAll(studentsAdded);
         return studentsAdded;
