@@ -90,10 +90,20 @@ public class StudentServiceTest {
         Mockito.doReturn(Optional.of(student3)).when(studentRepository).findByEmail(sEmail3);
         Mockito.doReturn(Optional.of(student2)).when(studentRepository).findById(sID2);
         Mockito.doReturn(Optional.of(student1)).when(studentRepository).findById(sID1);
+        Mockito.doReturn(List.of(student1, student2, student3)).when(studentRepository).findAll();
         Mockito.doReturn(missingStudent).when(studentRepository).findById(missingID);
 
         Mockito.doReturn(Optional.of(group1)).when(groupRepository).findById(group1ID);
 
+    }
+
+    @Test
+    public void getAllGroups() {
+        List<Student> students = studentService.getAllStudents();
+        assertEquals(students.size(), 3 );
+        assertTrue(students.contains(student1));
+        assertTrue(students.contains(student2));
+        assertTrue(students.contains(student3));
     }
 
     @Test

@@ -90,6 +90,12 @@ public class ActivityServiceTest {
     }
 
     @Test
+    public void getAllActivities() {
+        List<Activity> activities = activityService.getAllActivities();
+        assertEquals(activities.size(), 4);
+    }
+
+    @Test
     public void testUpdatesStatuses() throws ServiceException {
         assertEquals(4, activityService.getAllActivities().size());
         assertEquals(activityService.getAllActivities().stream()
