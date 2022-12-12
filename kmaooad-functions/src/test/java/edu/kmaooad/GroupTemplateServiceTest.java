@@ -10,6 +10,7 @@ import edu.kmaooad.service.ServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,21 +21,11 @@ import org.mockito.quality.Strictness;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class GroupTemplateServiceTest {
-
-/*
-    @Autowired
-    GroupTemplateService groupTemplateService;
-
-
-    @Autowired
-    private WebTestClient client;
-*/
 
     @InjectMocks
     GroupTemplateService groupTemplateService;
@@ -65,6 +56,10 @@ public class GroupTemplateServiceTest {
         Mockito.doReturn(missingGroup).when(groupTemplateRepository).findById(missingID);
     }
 
+    @Test
+    public void testGetTemplateByIdFail() throws ServiceException {
+        assertThrows(ServiceException.class, () -> groupTemplateService.getTemplateById("unknown id"));
+    }
 
     @Test
     public void addGroup() throws ServiceException {
