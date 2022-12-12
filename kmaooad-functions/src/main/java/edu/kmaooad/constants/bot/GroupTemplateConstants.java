@@ -25,5 +25,6 @@ public class GroupTemplateConstants {
 
     public static final String CANNOT_CREATE_EMPTY_TEMPLATE = "Не можна створити порожній шаблон для груп. Потрібно вказати хоча би одне поле.";
     public static final String CANNOT_UPDATE_TEMPLATE_EXISTS = "Неможливо оновити шаблон. Інший шаблон з такими даними вже існує.";
+    public static final String CANNOT_GET_TEMPLATE = "Шаблону з таким ідентифікатором не існує. Спробуйте ще раз.";
     public static final String CANNOT_DELETE_TEMPLATE_NOT_EXISTS = "Неможливо видалити шаблон. Шаблону з таким ідентифікатором не існує.";
 }
