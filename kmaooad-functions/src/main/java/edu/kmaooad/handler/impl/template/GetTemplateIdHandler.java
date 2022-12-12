@@ -1,6 +1,5 @@
 package edu.kmaooad.handler.impl.template;
 
-import edu.kmaooad.constants.bot.GroupConstants;
 import edu.kmaooad.constants.bot.GroupTemplateConstants;
 import edu.kmaooad.handler.CommonRequestHandler;
 import edu.kmaooad.model.GroupTemplate;

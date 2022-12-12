@@ -49,7 +49,6 @@ public class UpdateTemplateDialog extends DialogHandler {
             return response;
         };
 
-
         handlers.put(ConversationState.ASK_FOR_TEMPLATE_ID, new DialogSingleHandler(askTemplateIdHandler));
         handlers.put(ConversationState.WAITING_FOR_TEMPLATE_ID, new DialogSingleHandler(getTemplateIdHandler, moveToNext));
 
@@ -97,7 +96,7 @@ public class UpdateTemplateDialog extends DialogHandler {
             telegramService.sendMessage(dispatchRequest.getChatId(), GroupTemplateConstants.TEMPLATE_SUCCESSFULLY_UPDATED);
         } catch(ServiceException e) {
             log.error("Cannot update template: " + template);
-            telegramService.sendMessage(dispatchRequest.getChatId(), "Cannot update template");
+            telegramService.sendMessage(dispatchRequest.getChatId(), GroupTemplateConstants.CANNOT_UPDATE_TEMPLATE_EXISTS);
         }
 
         dispatchRequest.getUserSession().setDialogState(null);

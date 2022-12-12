@@ -71,8 +71,8 @@ public class DeleteTemplateDialog extends DialogHandler {
             templateService.deleteGroupTemplate(template.getId());
             telegramService.sendMessage(dispatchRequest.getChatId(), GroupTemplateConstants.TEMPLATE_SUCCESSFULLY_DELETED);
         } catch(ServiceException e) {
-            log.error("Cannot add template: " + template);
-            telegramService.sendMessage(dispatchRequest.getChatId(), e.getMessage());
+            log.error("Cannot delete template: " + template);
+            telegramService.sendMessage(dispatchRequest.getChatId(),GroupTemplateConstants.CANNOT_DELETE_TEMPLATE_NOT_EXISTS);
         }
 
         dispatchRequest.getUserSession().setDialogState(null);
