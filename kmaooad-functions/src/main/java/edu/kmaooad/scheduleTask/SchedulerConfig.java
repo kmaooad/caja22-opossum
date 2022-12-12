@@ -1,6 +1,7 @@
 package edu.kmaooad.scheduleTask;
 
-import edu.kmaooad.service.GroupService;
+import edu.kmaooad.service.ActivityService;
+import edu.kmaooad.service.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -12,14 +13,19 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 @ConditionalOnProperty(name = "scheduler.enabled", matchIfMissing = true)
 @Slf4j
+/**
+ * Auto-update activities based on schedule
+ * (i.e. when activity start date passes, mark it as ‘in progress’ for the group,
+ * when activity end date passes, mark it as completed by the group)
+ */
 public class SchedulerConfig {
 
     @Autowired
-    private GroupService groupService;
+    private ActivityService activityService;
 
-    @Scheduled(fixedDelay = 4000)
-    public void computePrice() throws InterruptedException {
-        log.warn("Hi I am job'a!");
-//        log.warn("TEST: " +groupService.getGroupById("1").toString());
+    // job to auto-update statuses for activities each 12 hours
+    @Scheduled(fixedDelay = 43200000)
+    public void updateStatuses() throws ServiceException {
+        activityService.updateStatuses();
     }
 }

@@ -1,12 +1,8 @@
 package edu.kmaooad;
 
 import edu.kmaooad.model.Activity;
-import edu.kmaooad.model.GroupTemplate;
-import edu.kmaooad.repositories.GroupRepository;
-import edu.kmaooad.repositories.GroupTemplateRepository;
 import edu.kmaooad.service.ActivityService;
 import edu.kmaooad.service.GroupService;
-import edu.kmaooad.service.GroupTemplateService;
 import edu.kmaooad.service.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
