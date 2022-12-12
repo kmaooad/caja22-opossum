@@ -150,4 +150,21 @@ public class ActivityServiceTest {
         Mockito.doReturn(Optional.of(justActivity)).when(activityRepository).findByName(justActivity.getName());
         assertThrows(ServiceException.class, () -> activityService.addActivity(justActivity));
     }
+
+    @Test
+    public void testUpdateActivitiesSetStatus() throws ServiceException {
+
+        Activity justActivity = new Activity();
+        justActivity.setId("5");
+        justActivity.setName("justActiv");
+        justActivity.setStartDate(null);
+        justActivity.setEndDate(null);
+
+        assertEquals(activityService.updateActivitiesSetStatus(activities,"COMPLETE").size(),4);
+
+        activities.add(justActivity);
+
+        assertThrows(ServiceException.class, () ->
+                activityService.updateActivitiesSetStatus(activities,"COMPLETE"));
+    }
 }
