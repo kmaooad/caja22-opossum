@@ -5,11 +5,13 @@ import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.constants.bot.DialogState;
 import edu.kmaooad.constants.bot.GroupConstants;
 import edu.kmaooad.handler.DialogHandler;
-import edu.kmaooad.handler.impl.group.common.*;
+import edu.kmaooad.handler.impl.group.common.AskGroupIDHandler;
+import edu.kmaooad.handler.impl.group.common.GetGroupIDHandler;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.service.GroupService;
+import edu.kmaooad.service.ServiceException;
 import edu.kmaooad.service.TelegramService;
 import edu.kmaooad.service.UserSessionService;
 import lombok.extern.slf4j.Slf4j;
@@ -55,10 +57,14 @@ public class DeleteGroupDialog extends DialogHandler {
     @Override
     protected void finishActions(UserRequest dispatchRequest) {
         Group group = (Group) dispatchRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
-        if (groupService.deleteGroup(group.getId())) {
+
+
+        try {
+            groupService.deleteGroup(group.getId());
             log.info("Successfully deleted group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), String.format(GroupConstants.SUCCESSFULLY_DELETED, GroupConstants.groupToString(group)));
-        } else {
+        } catch (ServiceException e) {
+            e.printStackTrace();
             log.error("Cannot delete group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.ERROR_WHILE_DELETE);
         }
