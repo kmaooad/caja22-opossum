@@ -140,17 +140,14 @@ public class StudentService {
             Optional<Student> student = studentRepository.findById(s.getId());
             if (student.isPresent()) {
                 Student found = student.get();
-                if (found != null) {
-                    found.setEmail(s.getEmail());
-                    found.setFirstName(s.getFirstName());
-                    found.setDepartment(s.getDepartment());
-                    found.setGroupId(s.getGroupId());
-                    found.setPatronym(s.getPatronym());
-                    updatedStudents.add(s);
-                }
+                found.setEmail(s.getEmail());
+                found.setFirstName(s.getFirstName());
+                found.setDepartment(s.getDepartment());
+                found.setGroupId(s.getGroupId());
+                found.setPatronym(s.getPatronym());
+                updatedStudents.add(s);
             } else {
                 throw new ServiceException("Failed to update students: contains student " + s + " doesn`t exists in database");
-
             }
 
         }

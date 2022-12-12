@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Document(collection = "activity")
 public class Activity {
-    @Id
+    @Id()
     String id;
     String name;
     LocalDate startDate;

@@ -4,9 +4,7 @@ package edu.kmaooad;
 import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.GroupTemplate;
-import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.GroupTemplateRepository;
-import edu.kmaooad.service.GroupService;
 import edu.kmaooad.service.GroupTemplateService;
 import edu.kmaooad.service.ServiceException;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +17,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.Optional;
 
@@ -65,16 +61,15 @@ public class GroupTemplateServiceTest {
         activity.setId("1");
 
 
-      Mockito.doReturn(Optional.of(group1)).when(groupTemplateRepository).findById(group1ID);
-      Mockito.doReturn(missingGroup).when(groupTemplateRepository).findById(missingID);
+        Mockito.doReturn(Optional.of(group1)).when(groupTemplateRepository).findById(group1ID);
+        Mockito.doReturn(missingGroup).when(groupTemplateRepository).findById(missingID);
     }
-
 
 
     @Test
     public void addGroup() throws ServiceException {
-        assertEquals(group1,groupTemplateService.addGroupTemplate(group1));
-        Mockito.doReturn(group1).when(groupTemplateRepository).findByNameAndYearAndGrade(group1.getName(), group1.getYear(),group1.getGrade());
+        assertEquals(group1, groupTemplateService.addGroupTemplate(group1));
+        Mockito.doReturn(group1).when(groupTemplateRepository).findByNameAndYearAndGrade(group1.getName(), group1.getYear(), group1.getGrade());
         assertThrows(ServiceException.class, () -> groupTemplateService.addGroupTemplate(group1));
 
     }
@@ -88,13 +83,13 @@ public class GroupTemplateServiceTest {
         assertEquals(group1, groupTemplateService.updateGroupTemplate(group1));
         GroupTemplate group2 = new GroupTemplate();
         group2.setId(missingID);
-        assertThrows(ServiceException.class, () ->groupTemplateService.updateGroupTemplate(group2));
+        assertThrows(ServiceException.class, () -> groupTemplateService.updateGroupTemplate(group2));
 
     }
 
     @Test
     public void deleteGroup() throws ServiceException {
         assertEquals(group1ID, groupTemplateService.deleteGroupTemplate(group1ID).getId());
-        assertThrows(ServiceException.class, () ->groupTemplateService.deleteGroupTemplate(missingID));
+        assertThrows(ServiceException.class, () -> groupTemplateService.deleteGroupTemplate(missingID));
     }
 }

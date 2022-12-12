@@ -66,7 +66,8 @@ public class AddGroupDialog extends DialogHandler {
     public boolean isApplicable(UserRequest request) {
         return request.getUserSession().getDialogState().equals(getDialogType());
     }
-
+    //todo
+    // take off comment
     @Override
     protected void finishActions(UserRequest dispatchRequest) {
         log.warn("AddGroupDialog finish actions: " + dispatchRequest.getUserSession().getData().get("group"));

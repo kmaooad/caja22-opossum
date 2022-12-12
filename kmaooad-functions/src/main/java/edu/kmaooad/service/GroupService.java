@@ -1,6 +1,5 @@
 package edu.kmaooad.service;
 
-import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.repositories.GroupRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -154,7 +153,6 @@ public class GroupService {
             return activityAdd;
         }
         throw new ServiceException("Failed to add activity: " + activityAdd + " to group with id: " + groupId + " group with such id doesn`t exist in database");
-
     }
 
     /**
