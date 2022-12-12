@@ -4,7 +4,6 @@ package edu.kmaooad;
 import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.GroupTemplate;
-import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.GroupTemplateRepository;
 import edu.kmaooad.service.GroupTemplateService;
 import edu.kmaooad.service.ServiceException;
@@ -62,10 +61,9 @@ public class GroupTemplateServiceTest {
         activity.setId("1");
 
 
-      Mockito.doReturn(Optional.of(group1)).when(groupTemplateRepository).findById(group1ID);
-      Mockito.doReturn(missingGroup).when(groupTemplateRepository).findById(missingID);
+        Mockito.doReturn(Optional.of(group1)).when(groupTemplateRepository).findById(group1ID);
+        Mockito.doReturn(missingGroup).when(groupTemplateRepository).findById(missingID);
     }
-
 
 
     @Test
@@ -87,13 +85,13 @@ public class GroupTemplateServiceTest {
         assertEquals(group1, groupTemplateService.updateGroupTemplate(group1));
         GroupTemplate group2 = new GroupTemplate();
         group2.setId(missingID);
-        assertThrows(ServiceException.class, () ->groupTemplateService.updateGroupTemplate(group2));
+        assertThrows(ServiceException.class, () -> groupTemplateService.updateGroupTemplate(group2));
 
     }
 
     @Test
     public void deleteGroup() throws ServiceException {
         assertEquals(group1ID, groupTemplateService.deleteGroupTemplate(group1ID).getId());
-        assertThrows(ServiceException.class, () ->groupTemplateService.deleteGroupTemplate(missingID));
+        assertThrows(ServiceException.class, () -> groupTemplateService.deleteGroupTemplate(missingID));
     }
 }
