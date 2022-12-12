@@ -1,4 +1,4 @@
-package edu.kmaooad.handler.impl.template;
+package edu.kmaooad.handler.impl.template.common;
 
 import edu.kmaooad.constants.bot.GlobalConstants;
 import edu.kmaooad.constants.bot.GroupConstants;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 @Component
-public class GetTemplateYearHandler extends CommonRequestHandler {
+public class GetTemplateGradeHandler extends CommonRequestHandler {
     private final TelegramService telegramService;
     private final KeyboardHelper keyboardHelper;
 
-    public GetTemplateYearHandler(TelegramService telegramService, KeyboardHelper keyboardHelper) {
+    public GetTemplateGradeHandler(TelegramService telegramService, KeyboardHelper keyboardHelper) {
         this.telegramService = telegramService;
         this.keyboardHelper = keyboardHelper;
     }
@@ -25,18 +25,20 @@ public class GetTemplateYearHandler extends CommonRequestHandler {
         ReplyKeyboardMarkup replyKeyboardMarkup = keyboardHelper.buildMenuWithCancel();
 
         String messageText = dispatchRequest.getUpdate().getMessage().getText();
-        UserSession userSession = dispatchRequest.getUserSession();
-        GroupTemplate template = (GroupTemplate) userSession.getData().get(GroupTemplateConstants.GROUP_TEMPLATE_MAP_KEY);
-
         try {
+            UserSession userSession = dispatchRequest.getUserSession();
+
+            GroupTemplate template = (GroupTemplate) userSession.getData().get(GroupTemplateConstants.GROUP_TEMPLATE_MAP_KEY);
             if(!messageText.equals("-")) {
-                template.setYear(Integer.parseInt(messageText));
+                template.setGrade(Integer.parseInt(messageText));
             } else {
-                template.setYear(null);
+                template.setGrade(null);
             }
+
             return new HandlerResponse(null, true);
         } catch (Exception e) {
-            return new HandlerResponse(telegramService.sendMessage(dispatchRequest.getChatId(), String.format(GroupTemplateConstants.WRONG_YEAR, messageText), replyKeyboardMarkup), false);
+            e.printStackTrace();
+            return new HandlerResponse(telegramService.sendMessage(dispatchRequest.getChatId(), String.format(GroupTemplateConstants.WRONG_GRADE, messageText), replyKeyboardMarkup), false);
         }
     }
 }

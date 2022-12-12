@@ -2,8 +2,8 @@ package edu.kmaooad.handler.grouptemplate.dialogs;
 
 import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.constants.bot.DialogState;
-import edu.kmaooad.handler.impl.template.AskTemplateIdHandler;
-import edu.kmaooad.handler.impl.template.GetTemplateIdHandler;
+import edu.kmaooad.handler.impl.template.common.AskTemplateIdHandler;
+import edu.kmaooad.handler.impl.template.common.GetTemplateIdHandler;
 import edu.kmaooad.handler.impl.template.button.TemplateButtonsHandler;
 import edu.kmaooad.handler.impl.template.dialog.DeleteTemplateDialog;
 import edu.kmaooad.model.*;

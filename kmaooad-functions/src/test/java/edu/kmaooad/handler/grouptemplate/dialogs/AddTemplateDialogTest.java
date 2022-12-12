@@ -2,8 +2,11 @@ package edu.kmaooad.handler.grouptemplate.dialogs;
 
 import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.constants.bot.DialogState;
-import edu.kmaooad.handler.impl.template.*;
 import edu.kmaooad.handler.impl.template.button.TemplateButtonsHandler;
+import edu.kmaooad.handler.impl.template.common.AskTemplateNameHandler;
+import edu.kmaooad.handler.impl.template.common.AskTemplateYearHandler;
+import edu.kmaooad.handler.impl.template.common.GetTemplateNameHandler;
+import edu.kmaooad.handler.impl.template.common.GetTemplateYearHandler;
 import edu.kmaooad.handler.impl.template.dialog.AddTemplateDialog;
 import edu.kmaooad.model.*;
 import edu.kmaooad.service.GroupTemplateService;

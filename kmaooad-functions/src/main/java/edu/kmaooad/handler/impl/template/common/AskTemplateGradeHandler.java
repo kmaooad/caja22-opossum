@@ -1,4 +1,4 @@
-package edu.kmaooad.handler.impl.template;
+package edu.kmaooad.handler.impl.template.common;
 
 import edu.kmaooad.constants.bot.GlobalConstants;
 import edu.kmaooad.constants.bot.GroupTemplateConstants;
@@ -10,11 +10,11 @@ import edu.kmaooad.service.TelegramService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AskTemplateYearHandler extends CommonRequestHandler {
+public class AskTemplateGradeHandler extends CommonRequestHandler {
     private final TelegramService telegramService;
     private final KeyboardHelper keyboardHelper;
 
-    public AskTemplateYearHandler(TelegramService telegramService, KeyboardHelper keyboardHelper) {
+    public AskTemplateGradeHandler(TelegramService telegramService, KeyboardHelper keyboardHelper) {
         this.telegramService = telegramService;
         this.keyboardHelper = keyboardHelper;
     }
@@ -26,7 +26,7 @@ public class AskTemplateYearHandler extends CommonRequestHandler {
     }
 
     private String message() {
-        return GroupTemplateConstants.ASK_FOR_GROUP_TEMPLATE_YEAR + "\n\n"
+        return GroupTemplateConstants.ASK_FOR_GROUP_TEMPLATE_GRADE + "\n\n"
                 + GlobalConstants.SKIP_STEP;
     }
 }

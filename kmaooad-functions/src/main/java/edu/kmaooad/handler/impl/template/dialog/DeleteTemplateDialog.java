@@ -2,11 +2,10 @@ package edu.kmaooad.handler.impl.template.dialog;
 
 import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.constants.bot.DialogState;
-import edu.kmaooad.constants.bot.GroupConstants;
 import edu.kmaooad.constants.bot.GroupTemplateConstants;
 import edu.kmaooad.handler.DialogHandler;
-import edu.kmaooad.handler.impl.template.AskTemplateIdHandler;
-import edu.kmaooad.handler.impl.template.GetTemplateIdHandler;
+import edu.kmaooad.handler.impl.template.common.AskTemplateIdHandler;
+import edu.kmaooad.handler.impl.template.common.GetTemplateIdHandler;
 import edu.kmaooad.handler.impl.template.button.TemplateButtonsHandler;
 import edu.kmaooad.model.GroupTemplate;
 import edu.kmaooad.model.HandlerResponse;

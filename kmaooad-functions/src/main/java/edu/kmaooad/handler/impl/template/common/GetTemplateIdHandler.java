@@ -1,4 +1,4 @@
-package edu.kmaooad.handler.impl.template;
+package edu.kmaooad.handler.impl.template.common;
 
 import edu.kmaooad.constants.bot.GroupTemplateConstants;
 import edu.kmaooad.handler.CommonRequestHandler;
