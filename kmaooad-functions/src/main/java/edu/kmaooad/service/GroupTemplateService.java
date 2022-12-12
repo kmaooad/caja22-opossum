@@ -43,6 +43,9 @@ public class GroupTemplateService {
      */
     public GroupTemplate updateGroupTemplate(GroupTemplate groupTemplateUpdate) throws ServiceException {
         Optional<GroupTemplate> group = groupTemplateRepository.findById(groupTemplateUpdate.getId());
+        if (null != groupTemplateRepository.findByNameAndYearAndGrade(groupTemplateUpdate.getName(), groupTemplateUpdate.getYear(), groupTemplateUpdate.getGrade())){
+            throw new ServiceException("Failed to add group template: "+groupTemplateUpdate + " group with such values exists in database");
+        }
         if (group.isPresent()) {
             GroupTemplate groupFound = group.get();
             groupFound.setName(groupTemplateUpdate.getName());

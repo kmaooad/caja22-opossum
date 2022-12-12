@@ -1,31 +1,33 @@
 package edu.kmaooad;
 
-import edu.kmaooad.model.Activity;
-import edu.kmaooad.service.ActivityService;
-import edu.kmaooad.service.GroupService;
+import edu.kmaooad.model.GroupTemplate;
+import edu.kmaooad.repositories.GroupRepository;
+import edu.kmaooad.repositories.GroupTemplateRepository;
+import edu.kmaooad.service.GroupTemplateService;
 import edu.kmaooad.service.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SpringBootTest
 public class DBSampleTest {
 
     @Autowired
-    ActivityService activityService;
-    @Autowired
-    GroupService groupService;
-    @Test
-    public void test() throws ServiceException {
-        Activity a = new Activity();
-        List<Activity> act = new ArrayList<>();
+    GroupTemplateService groupTemplateService;
 
-        a.setId("6393789438a910210ff8ced0");
-        a.setName("name");
-        act.add(a);
-        activityService.updateActivities(act);
+    @Test
+    public void test() {
+        GroupTemplate gr = new GroupTemplate();
+        gr.setName("name");
+        gr.setYear(2);
+        gr.setGrade(1);
+        gr.setId("639115d196a56063c9b7a655");
+        try {
+           // groupTemplateService.updateGroupTemplate(gr);
+            groupTemplateService.updateGroupTemplate(gr);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        //System.out.println(groupRepository.findAll());
     }
 }
