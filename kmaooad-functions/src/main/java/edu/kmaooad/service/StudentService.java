@@ -28,8 +28,6 @@ public class StudentService {
     @Autowired
     private GroupRepository groupRepository;
 
-
-
     @Autowired
     private JavaMailSender mailSender;
 
