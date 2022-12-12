@@ -7,10 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static edu.kmaooad.constants.bot.GlobalConstants.ACTIVITY_STATUS_COMPLETED;
+import static edu.kmaooad.constants.bot.GlobalConstants.ACTIVITY_STATUS_IN_PROGRESS;
 import static edu.kmaooad.constants.bot.GroupConstants.ASSIGNED;
 
 @Service
@@ -19,11 +23,6 @@ public class ActivityService {
 
     @Autowired
     private ActivityRepository activityRepository;
-
-    @Autowired
-    private GroupService groupService;
-
-    private final String splitter = " || ";
 
 
     public List<Activity> getAllActivities() {
@@ -62,18 +61,37 @@ public class ActivityService {
             activityFound.setEndDate( a.getEndDate());
             activityRepository.save(activityFound);
         }else{
-            throw new ServiceException("Failed to update activity: "+activity + " activity with such id does not exists in database");
+            throw new ServiceException("Failed to update activity: "+activity +
+                    " activity with such id does not exists in database");
         }
         }
         return activityList;
     }
 
+    public List<Activity> updateActivitiesSetStatus(List<Activity> activityList, String status) throws ServiceException {
+        for (Activity a:activityList) {
+            Optional<Activity> activity = activityRepository.findById(a.getId());
+            if (activity.isPresent()) {
+                Activity activityFound = activity.get();
+                activityFound.setName(a.getName());
+                activityFound.setStatus(status);
+                activityFound.setStartDate(a.getStartDate());
+                activityFound.setEndDate(a.getEndDate());
+                activityRepository.save(activityFound);
+            }else{
+                throw new ServiceException("Failed to update activity: "+activity +
+                        " activity with such id does not exists in database");
+            }
+        }
+        return activityList;
+    }
     public Activity addActivity(Activity activity) throws ServiceException {
 
         Optional<Activity> found = activityRepository.findByName(activity.getName());
 
         if (found.isPresent()) {
-            throw new ServiceException("Failed to add activity: "+activity + " activity with such values exists in database");
+            throw new ServiceException("Failed to add activity: "+activity +
+                    " activity with such values exists in database");
 
         } else {
             activityRepository.save(activity);
@@ -81,5 +99,32 @@ public class ActivityService {
         }
     }
 
+    public void updateStatuses() throws ServiceException {
+        LocalDate localDate = LocalDate.now(ZoneId.systemDefault());
+
+        List<Activity> activities = getAllActivities().stream().filter(c ->
+                c.getStartDate()!=null || c.getEndDate()!=null ||
+                        (c.getStatus() != null && !c.getStatus().equals(ACTIVITY_STATUS_COMPLETED))
+        ).collect(Collectors.toList());
+
+        log.warn("BEFORE JOB:"+getAllActivities().toString());
+
+        List<Activity> completed = activities.stream().filter(c ->
+                (c.getStatus() == null || c.getStatus().equals(ACTIVITY_STATUS_IN_PROGRESS))
+                        && c.getStartDate().isBefore(localDate) && localDate.isAfter(c.getEndDate()) )
+                .collect(Collectors.toList());
+
+        activities.removeAll(completed);
+
+        List<Activity> isProgress = activities.stream().filter(c -> c.getStatus() == null &&
+                c.getStartDate().isBefore(localDate)
+                && localDate.isBefore(c.getEndDate()) )
+                .collect(Collectors.toList());
+
+        updateActivitiesSetStatus(completed,ACTIVITY_STATUS_COMPLETED);
+        updateActivitiesSetStatus(isProgress,ACTIVITY_STATUS_IN_PROGRESS);
+
+        log.warn("AFTER JOB :"+getAllActivities().toString());
+    }
 
 }
