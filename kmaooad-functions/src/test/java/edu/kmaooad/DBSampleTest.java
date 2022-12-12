@@ -1,9 +1,11 @@
 package edu.kmaooad;
 
 import edu.kmaooad.model.Activity;
+import edu.kmaooad.model.Student;
 import edu.kmaooad.service.ActivityService;
 import edu.kmaooad.service.GroupService;
 import edu.kmaooad.service.ServiceException;
+import edu.kmaooad.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,15 +19,14 @@ public class DBSampleTest {
     @Autowired
     ActivityService activityService;
     @Autowired
-    GroupService groupService;
+    StudentService studentService;
     @Test
     public void test() throws ServiceException {
-        Activity a = new Activity();
-        List<Activity> act = new ArrayList<>();
+        Student s = new Student();
+        s.setEmail("adsf");
+        List<Student> students = new ArrayList<>();
+        students.add(s);
+        studentService.addStudents(students);
 
-        a.setId("6393789438a910210ff8ced0");
-        a.setName("name");
-        act.add(a);
-        activityService.updateActivities(act);
     }
 }

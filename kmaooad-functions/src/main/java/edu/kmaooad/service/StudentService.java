@@ -6,6 +6,8 @@ import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +24,16 @@ public class StudentService {
 
 
     // приймає список унікальних валідних студентів
-
+    @Autowired
+    private JavaMailSender mailSender;
+    private void sendEmail(String email){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("opossum.bot.notify@gmail.com");
+        message.setTo("daria.goptsii@gmail.com");
+        message.setSubject("Hello from Spring Boot!");
+        message.setText("This is an email sent using the Spring Framework's SimpleMailMessage class.");
+        mailSender.send(message);
+    }
     /**
      * @param students - list of students to add
      * @return added students updated, if at least one already exists - throws exception
@@ -39,7 +50,10 @@ public class StudentService {
                 throw new ServiceException("Failed to add students: contains student " + s + " already exists in database");
             }
         }
-        studentRepository.saveAll(studentsAdded);
+        for (Student s : students) {
+            sendEmail(s.getEmail());
+        }
+       // studentRepository.saveAll(studentsAdded);
         return studentsAdded;
     }
 
