@@ -1,6 +1,5 @@
 package edu.kmaooad.service;
 
-import edu.kmaooad.model.Group;
 import edu.kmaooad.model.Student;
 import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
@@ -71,23 +70,9 @@ public class StudentService {
         if (student.isPresent()) {
             Student studentPresent = student.get();
             List<String> activities = studentPresent.getActivities();
-            for (String a : activities) {
-                if (a.equals(activityAdd)) {
-                    throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " activity witch such id exists in this student in database");
+            for (String a : activities) if (a.equals(activityAdd)) throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " activity witch such id exists in this student in database");
 
-                }
-            }
-            Optional<Group> group = groupRepository.findById(studentPresent.getGroupId());
-            if (group.isPresent()) {
-                Group groupPresent = group.get();
-                List<String> activitiesInGroup = groupPresent.getActivities();
-                for (String a : activitiesInGroup) {
-                    if (a.equals(activityAdd)) {
-                        throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " student is assigned group with such activity");
 
-                    }
-                }
-            }
             studentPresent.getActivities().add(activityAdd);
             studentRepository.save(studentPresent);
             return activityAdd;
@@ -143,7 +128,6 @@ public class StudentService {
                 found.setEmail(s.getEmail());
                 found.setFirstName(s.getFirstName());
                 found.setDepartment(s.getDepartment());
-                found.setGroupId(s.getGroupId());
                 found.setPatronym(s.getPatronym());
                 updatedStudents.add(s);
             } else {

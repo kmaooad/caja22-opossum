@@ -82,10 +82,6 @@ public class StudentServiceTest {
         activity.setId(activityId);
         activityInDb.setId(activityInGroupId);
         group1.getActivities().add(activityInDb.getId());
-        student1.setGroupId(group1ID);
-        student2.setGroupId(group1ID);
-        student3.setGroupId(group1ID);
-
 
         Mockito.doReturn(Optional.of(student3)).when(studentRepository).findByEmail(sEmail3);
         Mockito.doReturn(Optional.of(student2)).when(studentRepository).findById(sID2);
@@ -143,7 +139,6 @@ public class StudentServiceTest {
     public void addAndDeleteActivityStudent() throws ServiceException {
         assertEquals(studentService.addStudentActivity(activity.getId(), sID1), activity.getId());
         assertThrows(ServiceException.class, () -> studentService.addStudentActivity(activityInDb.getId(), missingID));
-        assertThrows(ServiceException.class, () -> studentService.addStudentActivity(activityInGroup.getId(), sID1));
         assertEquals(studentService.deleteStudentActivity(activity.getId(), sID1), activity.getId());
         assertThrows(ServiceException.class, () -> studentService.deleteStudentActivity(activity.getId(), missingID));
     }

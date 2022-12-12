@@ -32,6 +32,24 @@ public class ActivityService {
         return activityRepository.findAll();
     }
 
+    /**
+     * @param id id of the group.
+     * @return group with passed id, null - if not found.
+     */
+    public Activity getActivityById(String id) {
+        Optional<Activity> activity = activityRepository.findById(id);
+        if (activity.isPresent()) {
+            return activity.get();
+        } else {
+            log.warn("Activity not found, id: " + id);
+            return null;
+        }
+    }
+
+    public boolean existById(String id) {
+        return activityRepository.existsById(id);
+    }
+
     public List<String> getStatusOfActivitiesForGroup(Group group) {
         List<Activity> allActivities = activityRepository.findAll();
         return allActivities.stream()
