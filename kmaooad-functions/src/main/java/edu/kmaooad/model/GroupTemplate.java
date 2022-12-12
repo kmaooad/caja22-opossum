@@ -18,8 +18,6 @@ import java.util.Optional;
 public class GroupTemplate {
     @Id
     String id;
-
-
     String name;
     Integer grade;
     Integer year;

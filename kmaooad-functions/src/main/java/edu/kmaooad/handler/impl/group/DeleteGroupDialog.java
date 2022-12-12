@@ -45,7 +45,7 @@ public class DeleteGroupDialog extends DialogHandler {
     public final HandlerResponse startDialog(UserRequest userRequest) {
         userRequest.getUserSession().getData().put(GroupConstants.GROUP_MAP_KEY, new Group());
         userSessionService.saveSession(userRequest.getChatId(), userRequest.getUserSession());
-        log.info("Some response: " + userRequest.getUserSession().getData().keySet().toString());
+        log.info("Some response: " + userRequest.getUserSession().getData().keySet());
         return super.startDialog(userRequest);
     }
 
@@ -57,8 +57,6 @@ public class DeleteGroupDialog extends DialogHandler {
     @Override
     protected void finishActions(UserRequest dispatchRequest) {
         Group group = (Group) dispatchRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
-
-
         try {
             groupService.deleteGroup(group.getId());
             log.info("Successfully deleted group: " + group);

@@ -3,15 +3,37 @@ package edu.kmaooad.service;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.GroupTemplate;
 import edu.kmaooad.repositories.GroupTemplateRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class GroupTemplateService {
     @Autowired
     private GroupTemplateRepository groupTemplateRepository;
+
+    /**
+     * @param id id of the template.
+     * @return template with passed id, null - if not found.
+     */
+    public GroupTemplate getTemplateById(String id) throws ServiceException {
+        Optional<GroupTemplate> template = groupTemplateRepository.findById(id);
+        if(template.isPresent()){
+            return template.get();
+        } else {
+            log.warn("Template not found, id: " + id);
+            throw new ServiceException("Failed to get template by id");
+        }
+    }
+
+    // Get all templates from db
+    public List<GroupTemplate> getAllTemplates(){
+        return groupTemplateRepository.findAll();
+    }
 
     /**
      * @param groupTemplate  - group template to add
@@ -19,6 +41,10 @@ public class GroupTemplateService {
      */
     public GroupTemplate addGroupTemplate(GroupTemplate groupTemplate) throws ServiceException {
 
+        if(groupTemplate.getName()==null&&groupTemplate.getYear() == null&& groupTemplate.getGrade()==null){
+            throw new ServiceException("Failed to add group template: "+groupTemplate + " all fields are null");
+
+        }
         if (null == groupTemplateRepository.findByNameAndYearAndGrade(groupTemplate.getName(), groupTemplate.getYear(), groupTemplate.getGrade())){
             groupTemplateRepository.save(groupTemplate);
             return groupTemplate;
@@ -33,6 +59,9 @@ public class GroupTemplateService {
      */
     public GroupTemplate updateGroupTemplate(GroupTemplate groupTemplateUpdate) throws ServiceException {
         Optional<GroupTemplate> group = groupTemplateRepository.findById(groupTemplateUpdate.getId());
+        if (null != groupTemplateRepository.findByNameAndYearAndGrade(groupTemplateUpdate.getName(), groupTemplateUpdate.getYear(), groupTemplateUpdate.getGrade())){
+            throw new ServiceException("Failed to add group template: "+groupTemplateUpdate + " group with such values exists in database");
+        }
         if (group.isPresent()) {
             GroupTemplate groupFound = group.get();
             groupFound.setName(groupTemplateUpdate.getName());
