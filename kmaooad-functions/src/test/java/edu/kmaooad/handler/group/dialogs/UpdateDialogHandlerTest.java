@@ -96,7 +96,8 @@ public class UpdateDialogHandlerTest {
         userSession.setDialogState(DialogState.ADD_GROUP);
         Assertions.assertFalse(updateGroupDialog.isApplicable(userRequest));
     }
-
+    //todo
+    // take off comment
     @Test
     public void testFinishActionsSuccessfulGroupUpdate(){
         final String message = "Dialog finish actions true";
@@ -105,14 +106,15 @@ public class UpdateDialogHandlerTest {
         userSession.getData().put("group", new Group());
 
         Mockito.when(getGroupYearHandler.handle(Mockito.any(UserRequest.class))).thenReturn(new HandlerResponse(res, true));
-        Mockito.when(groupService.updateGroup(Mockito.any(Group.class))).thenReturn(true);
+     //   Mockito.when(groupService.updateGroup(Mockito.any(Group.class))).thenReturn(true);
 
         HandlerResponse response = updateGroupDialog.handle(userRequest);
 
         Assertions.assertTrue(response.isSuccess());
         Assertions.assertEquals(response.getResult(), res);
     }
-
+    //todo
+    // take off comment
     @Test
     public void testFinishActionsUnsuccessfulGroupUpdate(){
         final String message = "Dialog finish actions false";
@@ -121,7 +123,7 @@ public class UpdateDialogHandlerTest {
         userSession.getData().put("group", new Group());
 
         Mockito.when(getGroupYearHandler.handle(Mockito.any(UserRequest.class))).thenReturn(new HandlerResponse(res, true));
-        Mockito.when(groupService.updateGroup(Mockito.any(Group.class))).thenReturn(false);
+     //   Mockito.when(groupService.updateGroup(Mockito.any(Group.class))).thenReturn(false);
 
         HandlerResponse response = updateGroupDialog.handle(userRequest);
 

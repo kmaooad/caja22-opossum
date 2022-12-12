@@ -10,6 +10,7 @@ import edu.kmaooad.model.Group;
 import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.service.GroupService;
+import edu.kmaooad.service.ServiceException;
 import edu.kmaooad.service.TelegramService;
 import edu.kmaooad.service.UserSessionService;
 import lombok.extern.slf4j.Slf4j;
@@ -95,10 +96,12 @@ public class UpdateGroupDialog extends DialogHandler {
     protected void finishActions(UserRequest dispatchRequest) {
         log.warn("AddGroupDialog finish actions: " + dispatchRequest.getUserSession().getData().get("group"));
         Group group = (Group) dispatchRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
-        if (groupService.updateGroup(group)) {
+        try {
+            groupService.updateGroup(group);
             log.info("Successfully update group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), String.format(GroupConstants.SUCCESSFULLY_UPDATED, GroupConstants.groupToString(group)));
-        } else {
+        } catch (ServiceException e) {
+            e.printStackTrace();
             log.error("Cannot update group: " + group);
             telegramService.sendMessage(dispatchRequest.getChatId(), GroupConstants.ERROR_WHILE_UPDATE);
         }
