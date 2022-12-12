@@ -3,6 +3,10 @@ package edu.kmaooad.service;
 import edu.kmaooad.model.Student;
 import edu.kmaooad.repositories.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,6 +28,19 @@ public class MassStudentsService {
     public MassStudentsService(StudentRepository studentRepository, ActivityService activityService) {
         this.studentRepository = studentRepository;
         this.activityService = activityService;
+    }
+
+    @Autowired
+    @Qualifier("emailsender")
+    private JavaMailSender mailSender;
+
+    public void sendMail() {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("opossum.bot.notify@gmail.com");
+        message.setTo("at.cat.smile@gmail.com");
+        message.setSubject("Hello from Spring Boot!");
+        message.setText("This is an email sent using the Spring Framework's SimpleMailMessage class.");
+        mailSender.send(message);
     }
 
     public String generateStudentCSV(List<Student> students) {

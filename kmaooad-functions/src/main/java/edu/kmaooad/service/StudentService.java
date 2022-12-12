@@ -5,8 +5,16 @@ import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.MailSendException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.SendFailedException;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +27,30 @@ public class StudentService {
     @Autowired
     private GroupRepository groupRepository;
 
+    @Autowired
+    private JavaMailSender mailSender;
 
-    // приймає список унікальних валідних студентів
+    private void sendEmail(String email){
 
+        try {
+            MimeMessage msg = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+        helper.setTo(email);
+        helper.setSubject("Opossum bot");
+        helper.setText("<h1>Added student with this email</h1>", true);
+            mailSender.send(msg);
+        } catch (SendFailedException e ) {
+            e.printStackTrace();
+        } catch (MessagingException e ) {
+            e.printStackTrace();
+        }catch (MailSendException e ) {
+            e.printStackTrace();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
+
+    }
     /**
      * @param students - list of students to add
      * @return added students updated, if at least one already exists - throws exception
@@ -29,7 +58,6 @@ public class StudentService {
     public List<Student> addStudents(List<Student> students) throws ServiceException {
 
         List<Student> studentsAdded = new ArrayList<>();
-        List<Student> studentsNotAdded = new ArrayList<>();
         for (Student s : students) {
             Optional<Student> found = studentRepository.findByEmail(s.getEmail());
             if (found.isEmpty()) {
@@ -37,6 +65,9 @@ public class StudentService {
             } else {
                 throw new ServiceException("Failed to add students: contains student " + s + " already exists in database");
             }
+        }
+        for (Student s : students) {
+                sendEmail(s.getEmail());
         }
         studentRepository.saveAll(studentsAdded);
         return studentsAdded;
