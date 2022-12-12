@@ -29,7 +29,7 @@ public class GetTemplateGradeHandler extends CommonRequestHandler {
             UserSession userSession = dispatchRequest.getUserSession();
 
             GroupTemplate template = (GroupTemplate) userSession.getData().get(GroupTemplateConstants.GROUP_TEMPLATE_MAP_KEY);
-            if(messageText != "-") {
+            if(!messageText.equals("-")) {
                 template.setGrade(Integer.parseInt(messageText));
             } else {
                 template.setGrade(null);
@@ -37,6 +37,7 @@ public class GetTemplateGradeHandler extends CommonRequestHandler {
 
             return new HandlerResponse(null, true);
         } catch (Exception e) {
+            e.printStackTrace();
             return new HandlerResponse(telegramService.sendMessage(dispatchRequest.getChatId(), String.format(GroupTemplateConstants.WRONG_GRADE, messageText), replyKeyboardMarkup), false);
         }
     }

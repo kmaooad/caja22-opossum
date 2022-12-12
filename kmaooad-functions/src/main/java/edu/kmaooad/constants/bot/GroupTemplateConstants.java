@@ -8,19 +8,17 @@ public class GroupTemplateConstants {
     public static final String GROUP_TEMPLATE_ADD_BUTTON_LABEL = "Додати";
     public static final String GROUP_TEMPLATE_SHOW_ALL_BUTTON_LABEL = "Показати всі шаблони груп";
 
-    public static final String SHOW_GROUP_TEMPLATE = "<b>%s</b>\n" +
-            "Grade: %s\n" +
-            "Year: %s";
-
-    public static final String SHOW_GROUP_TEMPLATE_WITH_ID = "<b>%s</b>\n" +
-            "Id: %s\n" +
-            "Grade: %s\n" +
-            "Year: %s";
+    public static final String SHOW_GROUP_TEMPLATE = "Group template:\n<b>%s %s %s</b>";
+    public static final String SHOW_GROUP_TEMPLATE_WITH_ID = "Group template:\n<b>%s %s %s</b>\nid = <b>%s</b>";
 
     public static final String ASK_FOR_GROUP_TEMPLATE_ID = "Вкажіть ідентифікатор шаблону групи.";
     public static final String ASK_FOR_GROUP_TEMPLATE_NAME = "Вкажіть назву шаблону групи.";
     public static final String ASK_FOR_GROUP_TEMPLATE_GRADE = "Вкажіть курс шаблону групи.";
     public static final String ASK_FOR_GROUP_TEMPLATE_YEAR = "Вкажіть рік шаблону групи.";
+
+    public static final String TEMPLATE_SUCCESSFULLY_ADDED = "Шаблон успішно додано";
+    public static final String TEMPLATE_SUCCESSFULLY_UPDATED = "Шаблон успішно відредаговано";
+    public static final String TEMPLATE_SUCCESSFULLY_DELETED = "Шаблон успішно видалено";
 
     public static final String WRONG_GRADE = "Курс <b>%s</b> неправильний.\nСпробуйте ще раз.";
     public static final String WRONG_YEAR = "Рік <b>%s</b> неправильний.\nСпробуйте ще раз.";

@@ -43,7 +43,10 @@ public class ShowAllGroupTemplatesButtonHandler implements ButtonRequestHandler 
         for (GroupTemplate template : templates) {
             telegramService.sendMessage(dispatchRequest.getChatId(),
                     String.format(GroupTemplateConstants.SHOW_GROUP_TEMPLATE,
-                            template.getName(), template.getGrade(), template.getYear()));
+                            template.getName() == null ? "" : template.getName(),
+                            template.getGrade() == null ? "" : template.getGrade(),
+                            template.getYear() == null ? "" : template.getYear())
+            );
         }
 
         dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);

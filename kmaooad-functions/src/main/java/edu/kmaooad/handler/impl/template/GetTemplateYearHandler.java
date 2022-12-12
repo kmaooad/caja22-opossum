@@ -29,7 +29,7 @@ public class GetTemplateYearHandler extends CommonRequestHandler {
         GroupTemplate template = (GroupTemplate) userSession.getData().get(GroupTemplateConstants.GROUP_TEMPLATE_MAP_KEY);
 
         try {
-            if(messageText != "-") {
+            if(!messageText.equals("-")) {
                 template.setYear(Integer.parseInt(messageText));
             } else {
                 template.setYear(null);

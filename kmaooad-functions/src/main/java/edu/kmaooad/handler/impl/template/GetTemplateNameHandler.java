@@ -14,7 +14,7 @@ public class GetTemplateNameHandler extends CommonRequestHandler {
 
         GroupTemplate template = (GroupTemplate) userSession.getData().get(GroupTemplateConstants.GROUP_TEMPLATE_MAP_KEY);
         String messageText = dispatchRequest.getUpdate().getMessage().getText();
-        if(messageText != "-") {
+        if(!messageText.equals("-")) {
             template.setName(messageText);
         } else {
             template.setName(null);

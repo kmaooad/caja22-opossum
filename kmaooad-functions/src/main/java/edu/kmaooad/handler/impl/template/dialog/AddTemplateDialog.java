@@ -45,14 +45,14 @@ public class AddTemplateDialog extends DialogHandler {
             return response;
         };
 
-        handlers.put(ConversationState.ASK_FOR_GROUP_NAME, new DialogSingleHandler(askTemplateNameHandler));
-        handlers.put(ConversationState.WAITING_FOR_GROUP_NAME, new DialogSingleHandler(getTemplateNameHandler, moveToNext));
+        handlers.put(ConversationState.ASK_FOR_TEMPLATE_NAME, new DialogSingleHandler(askTemplateNameHandler));
+        handlers.put(ConversationState.WAITING_FOR_TEMPLATE_NAME, new DialogSingleHandler(getTemplateNameHandler, moveToNext));
 
-        handlers.put(ConversationState.ASK_FOR_GROUP_GRADE, new DialogSingleHandler(askTemplateGradeHandler));
-        handlers.put(ConversationState.WAITING_FOR_GROUP_GRADE, new DialogSingleHandler(getTemplateGradeHandler, moveToNext));
+        handlers.put(ConversationState.ASK_FOR_TEMPLATE_GRADE, new DialogSingleHandler(askTemplateGradeHandler));
+        handlers.put(ConversationState.WAITING_FOR_TEMPLATE_GRADE, new DialogSingleHandler(getTemplateGradeHandler, moveToNext));
 
-        handlers.put(ConversationState.ASK_FOR_GROUP_YEAR, new DialogSingleHandler(askTemplateYearHandler));
-        handlers.put(ConversationState.WAITING_FOR_GROUP_YEAR, new DialogSingleHandler(getTemplateYearHandler));
+        handlers.put(ConversationState.ASK_FOR_TEMPLATE_YEAR, new DialogSingleHandler(askTemplateYearHandler));
+        handlers.put(ConversationState.WAITING_FOR_TEMPLATE_YEAR, new DialogSingleHandler(getTemplateYearHandler));
     }
 
     @Override
@@ -73,9 +73,10 @@ public class AddTemplateDialog extends DialogHandler {
 
         try {
             templateService.addGroupTemplate(template);
+            telegramService.sendMessage(dispatchRequest.getChatId(), GroupTemplateConstants.TEMPLATE_SUCCESSFULLY_ADDED);
         } catch(ServiceException e) {
             log.error("Cannot add template: " + template);
-            telegramService.sendMessage(dispatchRequest.getChatId(), e.getMessage());
+            telegramService.sendMessage(dispatchRequest.getChatId(), GroupTemplateConstants.CANNOT_CREATE_EMPTY_TEMPLATE);
         }
 
         dispatchRequest.getUserSession().setDialogState(null);

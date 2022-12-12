@@ -51,7 +51,11 @@ public class DeleteTemplateDialog extends DialogHandler {
         for (GroupTemplate template : templates) {
             telegramService.sendMessage(userRequest.getChatId(),
                     String.format(GroupTemplateConstants.SHOW_GROUP_TEMPLATE_WITH_ID,
-                            template.getName(), template.getId(), template.getGrade(), template.getYear()));
+                            template.getName() == null ? "" : template.getName(),
+                            template.getGrade() == null ? "" : template.getGrade(),
+                            template.getYear() == null ? "" : template.getYear(),
+                            template.getId())
+            );
         }
 
         userRequest.getUserSession().getData().put(GroupTemplateConstants.GROUP_TEMPLATE_MAP_KEY, new GroupTemplate());
@@ -65,6 +69,7 @@ public class DeleteTemplateDialog extends DialogHandler {
         GroupTemplate template = (GroupTemplate) dispatchRequest.getUserSession().getData().get(GroupTemplateConstants.GROUP_TEMPLATE_MAP_KEY);
         try {
             templateService.deleteGroupTemplate(template.getId());
+            telegramService.sendMessage(dispatchRequest.getChatId(), GroupTemplateConstants.TEMPLATE_SUCCESSFULLY_DELETED);
         } catch(ServiceException e) {
             log.error("Cannot add template: " + template);
             telegramService.sendMessage(dispatchRequest.getChatId(), e.getMessage());
