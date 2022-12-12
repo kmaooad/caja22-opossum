@@ -6,10 +6,16 @@ import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.SendFailedException;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,16 +29,27 @@ public class StudentService {
     private GroupRepository groupRepository;
 
 
-    // приймає список унікальних валідних студентів
+
     @Autowired
     private JavaMailSender mailSender;
+
     private void sendEmail(String email){
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("opossum.bot.notify@gmail.com");
-        message.setTo("daria.goptsii@gmail.com");
-        message.setSubject("Hello from Spring Boot!");
-        message.setText("This is an email sent using the Spring Framework's SimpleMailMessage class.");
-        mailSender.send(message);
+        MimeMessage msg = mailSender.createMimeMessage();
+        try {
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+        helper.setTo(email);
+        helper.setSubject("Opossum bot");
+        helper.setText("<h1>Added student with this email</h1>", true);
+            mailSender.send(msg);
+        } catch (SendFailedException e ) {
+            e.printStackTrace();
+        } catch (MessagingException e ) {
+            e.printStackTrace();
+        }catch (MailSendException e ) {
+            e.printStackTrace();
+        }
+
+
     }
     /**
      * @param students - list of students to add
@@ -41,7 +58,6 @@ public class StudentService {
     public List<Student> addStudents(List<Student> students) throws ServiceException {
 
         List<Student> studentsAdded = new ArrayList<>();
-        List<Student> studentsNotAdded = new ArrayList<>();
         for (Student s : students) {
             Optional<Student> found = studentRepository.findByEmail(s.getEmail());
             if (found.isEmpty()) {
@@ -53,7 +69,7 @@ public class StudentService {
         for (Student s : students) {
             sendEmail(s.getEmail());
         }
-       // studentRepository.saveAll(studentsAdded);
+        studentRepository.saveAll(studentsAdded);
         return studentsAdded;
     }
 

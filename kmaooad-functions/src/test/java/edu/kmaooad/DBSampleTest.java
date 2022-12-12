@@ -23,7 +23,7 @@ public class DBSampleTest {
     @Test
     public void test() throws ServiceException {
         Student s = new Student();
-        s.setEmail("adsf");
+        s.setEmail("daria.goptsii@gmail.com");
         List<Student> students = new ArrayList<>();
         students.add(s);
         studentService.addStudents(students);
