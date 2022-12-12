@@ -3,6 +3,7 @@ package edu.kmaooad;
 
 import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
+import edu.kmaooad.model.Student;
 import edu.kmaooad.repositories.ActivityRepository;
 import edu.kmaooad.service.ActivityService;
 import edu.kmaooad.service.ServiceException;
@@ -37,6 +38,7 @@ public class ActivityServiceTest {
     ActivityRepository activityRepository;
 
     private final Group group1 = new Group();
+    private final Student student1 = new Student();
 
     private final List<Activity> activities = new ArrayList<>();
 
@@ -49,6 +51,7 @@ public class ActivityServiceTest {
         group1.setYear(2022);
         group1.setGrade(1);
         group1.setActivities(List.of("1"));
+        student1.setActivities(List.of("1"));
 
         Activity completed = new Activity();
         completed.setId("1");
@@ -129,6 +132,14 @@ public class ActivityServiceTest {
     }
 
     @Test
+    public void testGetStatusOfActivitiesForStudent() {
+        List<String> res = activityService.getStatusOfActivitiesForStudent(student1);
+        assertEquals(activities.size(), res.size());
+        assertTrue(res.contains("complete " + ASSIGNED));
+        assertTrue(res.containsAll(List.of("prog", "haveStat", "justActiv")));
+    }
+
+    @Test
     public void testGetActivityByName() {
         assertEquals(activities.get(0), activityService.getActivityByName("complete"));
         assertNull(activityService.getActivityByName("test"));
@@ -148,7 +159,7 @@ public class ActivityServiceTest {
     }
 
     @Test
-    public void testUpdateActivitiesSetStatus() throws ServiceException {
+    public void testUpdateActivitiesSetStatusGroups() throws ServiceException {
 
         Activity justActivity = new Activity();
         justActivity.setId("5");

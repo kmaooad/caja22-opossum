@@ -110,6 +110,12 @@ public class StudentServiceTest {
     }
 
     @Test
+    public void getStudentByEmail() {
+        assertEquals(student3, studentService.getStudentByEmail(sEmail3));
+        assertNull(studentService.getStudentByEmail("test"));
+    }
+
+    @Test
     public void updateStudents() throws ServiceException {
         List<Student> notAdded = studentService.updateStudents(studentsList);
         List<Student> assumeInDB = new ArrayList<>();
