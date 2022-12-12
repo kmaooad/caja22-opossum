@@ -1,10 +1,10 @@
 package edu.kmaooad.service;
 
-import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.Student;
 import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
@@ -21,8 +22,9 @@ public class StudentService {
 
 
     // приймає список унікальних валідних студентів
+
     /**
-     * @param students  - list of students to add
+     * @param students - list of students to add
      * @return added students updated, if at least one already exists - throws exception
      */
     public List<Student> addStudents(List<Student> students) throws ServiceException {
@@ -30,26 +32,39 @@ public class StudentService {
         List<Student> studentsAdded = new ArrayList<>();
         List<Student> studentsNotAdded = new ArrayList<>();
         for (Student s : students) {
-            Student found = studentRepository.findByEmail(s.getEmail());
-            if (found == null) {
+            Optional<Student> found = studentRepository.findByEmail(s.getEmail());
+            if (found.isEmpty()) {
                 studentsAdded.add(s);
-
             } else {
-                throw new ServiceException("Failed to add students: contains student "+s + " already exists in database");
+                throw new ServiceException("Failed to add students: contains student " + s + " already exists in database");
             }
         }
         studentRepository.saveAll(studentsAdded);
         return studentsAdded;
     }
 
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
 
-// не додає якщо в групі студента вже є ця активність
+    public Student getStudentByEmail(String email) {
+        Optional<Student> group = studentRepository.findByEmail(email);
+        if (group.isPresent()) {
+            return group.get();
+        } else {
+            log.warn("Student not found, email: " + email);
+            return null;
+        }
+    }
+
+    // не додає якщо в групі студента вже є ця активність
+
     /**
-     * @param activityAdd  - activity  to add
-     * @param studentId  - student id to add to
+     * @param activityAdd - activity  to add
+     * @param studentId   - student id to add to
      * @return activity added, if student not found or activity exists in this student - throws exception
      */
-    public String addStudentActivity( String activityAdd,String studentId) throws ServiceException {
+    public String addStudentActivity(String activityAdd, String studentId) throws ServiceException {
 
         Optional<Student> student = studentRepository.findById(studentId);
 
@@ -58,7 +73,7 @@ public class StudentService {
             List<String> activities = studentPresent.getActivities();
             for (String a : activities) {
                 if (a.equals(activityAdd)) {
-                    throw new ServiceException("Failed to add activity: "+activityAdd+" to student with id: "+studentId + " activity witch such id exists in this student in database");
+                    throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " activity witch such id exists in this student in database");
 
                 }
             }
@@ -68,7 +83,7 @@ public class StudentService {
                 List<String> activitiesInGroup = groupPresent.getActivities();
                 for (String a : activitiesInGroup) {
                     if (a.equals(activityAdd)) {
-                        throw new ServiceException("Failed to add activity: "+activityAdd+" to student with id: "+studentId + " student is assigned group with such activity");
+                        throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " student is assigned group with such activity");
 
                     }
                 }
@@ -77,12 +92,12 @@ public class StudentService {
             studentRepository.save(studentPresent);
             return activityAdd;
         }
-        throw new ServiceException("Failed to add activity: "+activityAdd+" to student with id: "+studentId + " student with such id doesn`t exist in database");
+        throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " student with such id doesn`t exist in database");
 
     }
 
     /**
-     * @param activityId  - activity id to delete
+     * @param activityId - activity id to delete
      * @param studentId  - student id to add to
      * @return activity id deleted, if student not found or activity doesn`t exist in this student - throws exception
      */
@@ -98,14 +113,14 @@ public class StudentService {
                 }
             }
             if (activityFound == null) {
-                throw new ServiceException("Failed to add activity with id: "+activityId+" to student with id: "+studentId + "activity witch such id doesn`t exist in this student in database");
+                throw new ServiceException("Failed to add activity with id: " + activityId + " to student with id: " + studentId + "activity witch such id doesn`t exist in this student in database");
             }
             activities.remove(activityFound);
             studentPresent.setActivities(activities);
             studentRepository.save(studentPresent);
             return activityId;
         }
-        throw new ServiceException("Failed to delete activity with: "+activityId+" to student with id: "+studentId + " student with such id doesn`t exist in database");
+        throw new ServiceException("Failed to delete activity with: " + activityId + " to student with id: " + studentId + " student with such id doesn`t exist in database");
 
     }
 
@@ -115,7 +130,7 @@ public class StudentService {
 
 
     /**
-     * @param students  - list of students to update
+     * @param students - list of students to update
      * @return added students updated, if at least one doesn`t exists - throws exception
      */
     public List<Student> updateStudents(List<Student> students) throws ServiceException {
@@ -125,17 +140,14 @@ public class StudentService {
             Optional<Student> student = studentRepository.findById(s.getId());
             if (student.isPresent()) {
                 Student found = student.get();
-                if (found != null) {
-                    found.setEmail(s.getEmail());
-                    found.setFirstName(s.getFirstName());
-                    found.setDepartment(s.getDepartment());
-                    found.setGroupId(s.getGroupId());
-                    found.setPatronym(s.getPatronym());
-                    updatedStudents.add(s);
-                }
+                found.setEmail(s.getEmail());
+                found.setFirstName(s.getFirstName());
+                found.setDepartment(s.getDepartment());
+                found.setGroupId(s.getGroupId());
+                found.setPatronym(s.getPatronym());
+                updatedStudents.add(s);
             } else {
-                throw new ServiceException("Failed to update students: contains student "+s + " doesn`t exists in database");
-
+                throw new ServiceException("Failed to update students: contains student " + s + " doesn`t exists in database");
             }
 
         }

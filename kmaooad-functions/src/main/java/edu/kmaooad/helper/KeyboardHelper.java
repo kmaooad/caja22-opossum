@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Helper class, allows to build keyboards for users
@@ -19,7 +20,7 @@ public class KeyboardHelper {
     public ReplyKeyboardMarkup buildAdditionalActions(List<String> actions) {
         List<KeyboardButton> buttons = new ArrayList<>();
 
-        for (String action: actions) {
+        for (String action : actions) {
             buttons.add(new KeyboardButton(action));
         }
         KeyboardRow row1 = new KeyboardRow(buttons);
@@ -43,8 +44,12 @@ public class KeyboardHelper {
         keyboardRow2.add(GlobalConstants.STUDENTS_BUTTON_LABEL);
         keyboardRow2.add(GlobalConstants.ACTIVITIES_BUTTON_LABEL);
 
+        KeyboardRow keyboardRow3 = new KeyboardRow();
+        keyboardRow3.add(GlobalConstants.GROUP_SHOW_ALL_ASSIGN_LABEL);
+        keyboardRow3.add(GlobalConstants.STUDENT_SHOW_ALL_ASSIGN_LABEL);
+
         return ReplyKeyboardMarkup.builder()
-                .keyboard(List.of(keyboardRow1, keyboardRow2))
+                .keyboard(List.of(keyboardRow1, keyboardRow2, keyboardRow3))
                 .selective(true)
                 .resizeKeyboard(true)
                 .oneTimeKeyboard(false)
@@ -63,7 +68,7 @@ public class KeyboardHelper {
                 .build();
     }
 
-    public ReplyKeyboardMarkup buildGroupMenuWithCancel(){
+    public ReplyKeyboardMarkup buildGroupMenuWithCancel() {
         KeyboardRow keyboardRow1 = new KeyboardRow();
         keyboardRow1.add(GroupConstants.GROUP_ADD_BUTTON_LABEL);
         keyboardRow1.add(GroupConstants.GROUP_EDIT_BUTTON_LABEL);
@@ -77,6 +82,24 @@ public class KeyboardHelper {
 
         return ReplyKeyboardMarkup.builder()
                 .keyboard(List.of(keyboardRow1, keyboardRow2, keyboardRow3))
+                .selective(true)
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(false)
+                .build();
+    }
+
+    public ReplyKeyboardMarkup buildAdditionalActionsVertical(List<String> options) {
+
+        List<KeyboardRow> rows = options.stream()
+                .map(option -> new KeyboardRow(List.of(new KeyboardButton(option))))
+                .collect(Collectors.toList());
+
+        KeyboardRow cancelRow = new KeyboardRow();
+        cancelRow.add(GlobalConstants.CANCEL_BUTTON_LABEL);
+        rows.add(0, cancelRow);
+
+        return ReplyKeyboardMarkup.builder()
+                .keyboard(rows)
                 .selective(true)
                 .resizeKeyboard(true)
                 .oneTimeKeyboard(false)

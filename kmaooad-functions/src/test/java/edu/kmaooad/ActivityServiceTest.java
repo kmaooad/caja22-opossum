@@ -3,6 +3,7 @@ package edu.kmaooad;
 
 import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
+import edu.kmaooad.model.Student;
 import edu.kmaooad.repositories.ActivityRepository;
 import edu.kmaooad.service.ActivityService;
 import edu.kmaooad.service.ServiceException;
@@ -23,9 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static edu.kmaooad.constants.bot.GlobalConstants.ACTIVITY_STATUS_COMPLETED;
-import static edu.kmaooad.constants.bot.GlobalConstants.ACTIVITY_STATUS_IN_PROGRESS;
-import static edu.kmaooad.constants.bot.GroupConstants.ASSIGNED;
+import static edu.kmaooad.constants.bot.GlobalConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,9 +37,10 @@ public class ActivityServiceTest {
     @Mock
     ActivityRepository activityRepository;
 
-    final Group group1 = new Group();
+    private final Group group1 = new Group();
+    private final Student student1 = new Student();
 
-    private  ArrayList<Activity> activities = new ArrayList();
+    private final List<Activity> activities = new ArrayList<>();
 
     @BeforeEach
     public void initTest() {
@@ -51,6 +51,7 @@ public class ActivityServiceTest {
         group1.setYear(2022);
         group1.setGrade(1);
         group1.setActivities(List.of("1"));
+        student1.setActivities(List.of("1"));
 
         Activity completed = new Activity();
         completed.setId("1");
@@ -77,9 +78,9 @@ public class ActivityServiceTest {
         justActivity.setStartDate(null);
         justActivity.setEndDate(null);
 
-        activities.addAll(List.of(completed,inProg,haveStatus,justActivity));
+        activities.addAll(List.of(completed, inProg, haveStatus, justActivity));
 
-        Mockito.doReturn(List.of(completed,inProg,haveStatus,justActivity)).when(activityRepository).findAll();
+        Mockito.doReturn(List.of(completed, inProg, haveStatus, justActivity)).when(activityRepository).findAll();
         Mockito.doReturn(Optional.of(completed)).when(activityRepository).findById("1");
         Mockito.doReturn(Optional.of(inProg)).when(activityRepository).findById("2");
         Mockito.doReturn(Optional.of(haveStatus)).when(activityRepository).findById("3");
@@ -89,25 +90,31 @@ public class ActivityServiceTest {
     }
 
     @Test
+    public void getAllActivities() {
+        List<Activity> activities = activityService.getAllActivities();
+        assertEquals(activities.size(), 4);
+    }
+
+    @Test
     public void testUpdatesStatuses() throws ServiceException {
-        assertEquals(4,activityService.getAllActivities().size());
+        assertEquals(4, activityService.getAllActivities().size());
         assertEquals(activityService.getAllActivities().stream()
                 .filter(s -> s.getStatus() != null && s.getStatus().equals(ACTIVITY_STATUS_IN_PROGRESS))
-                .count(),1);
+                .count(), 1);
         assertEquals(activityService.getAllActivities().stream().filter(s -> s.getStatus() == null)
-                .count(),3);
+                .count(), 3);
 
         activityService.updateStatuses();
 
-        assertEquals(activityService.getAllActivities().size(),4);
+        assertEquals(activityService.getAllActivities().size(), 4);
         assertEquals(activityService.getAllActivities().stream()
                 .filter(s -> s.getStatus() != null && s.getStatus().equals(ACTIVITY_STATUS_IN_PROGRESS))
-                .count(),2);
+                .count(), 2);
         assertEquals(activityService.getAllActivities().stream()
                 .filter(s -> s.getStatus() != null && s.getStatus().equals(ACTIVITY_STATUS_COMPLETED))
-                .count(),1);
+                .count(), 1);
         assertEquals(activityService.getAllActivities().stream().filter(s -> s.getStatus() == null)
-                .count(),1);
+                .count(), 1);
     }
 
     @Test
@@ -119,23 +126,29 @@ public class ActivityServiceTest {
         justActivity.setStartDate(null);
         justActivity.setEndDate(null);
 
-        assertThrows(ServiceException.class, () ->activityService.updateActivities(List.of(justActivity)));
+        assertThrows(ServiceException.class, () -> activityService.updateActivities(List.of(justActivity)));
     }
 
     @Test
     public void testGetStatusOfActivitiesForGroup() {
-
         List<String> res = activityService.getStatusOfActivitiesForGroup(group1);
         assertEquals(activities.size(), res.size());
-        assertTrue(res.contains("complete"+ASSIGNED));
-        assertTrue(res.containsAll(List.of( "prog", "haveStat","justActiv")));
+        assertTrue(res.contains("complete " + ASSIGNED));
+        assertTrue(res.containsAll(List.of("prog", "haveStat", "justActiv")));
+    }
+
+    @Test
+    public void testGetStatusOfActivitiesForStudent() {
+        List<String> res = activityService.getStatusOfActivitiesForStudent(student1);
+        assertEquals(activities.size(), res.size());
+        assertTrue(res.contains("complete " + ASSIGNED));
+        assertTrue(res.containsAll(List.of("prog", "haveStat", "justActiv")));
     }
 
     @Test
     public void testGetActivityByName() {
-
         assertEquals(activities.get(0), activityService.getActivityByName("complete"));
-        assertEquals(null, activityService.getActivityByName("test"));
+        assertNull(activityService.getActivityByName("test"));
     }
 
     @Test
@@ -152,7 +165,7 @@ public class ActivityServiceTest {
     }
 
     @Test
-    public void testUpdateActivitiesSetStatus() throws ServiceException {
+    public void testUpdateActivitiesSetStatusGroups() throws ServiceException {
 
         Activity justActivity = new Activity();
         justActivity.setId("5");
@@ -160,11 +173,11 @@ public class ActivityServiceTest {
         justActivity.setStartDate(null);
         justActivity.setEndDate(null);
 
-        assertEquals(activityService.updateActivitiesSetStatus(activities,"COMPLETE").size(),4);
+        assertEquals(activityService.updateActivitiesSetStatus(activities, "COMPLETE").size(), 4);
 
         activities.add(justActivity);
 
         assertThrows(ServiceException.class, () ->
-                activityService.updateActivitiesSetStatus(activities,"COMPLETE"));
+                activityService.updateActivitiesSetStatus(activities, "COMPLETE"));
     }
 }

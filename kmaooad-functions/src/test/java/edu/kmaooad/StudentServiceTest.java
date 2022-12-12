@@ -48,7 +48,7 @@ public class StudentServiceTest {
     final static String sEmail1 = "e1";
     final static String sEmail2 = "e2";
     final static String sEmail3 = "e3";
-     static List<Student> studentsList = new ArrayList<>();
+    static List<Student> studentsList = new ArrayList<>();
     final static String missingID = "4";
 
     final static Optional<Student> missingStudent = Optional.empty();
@@ -60,6 +60,7 @@ public class StudentServiceTest {
     final Activity activity = new Activity();
     final Activity activityInDb = new Activity();
     final Activity activityInGroup = new Activity();
+
     @BeforeEach
     public void initTest() {
         MockitoAnnotations.openMocks(this);
@@ -86,13 +87,23 @@ public class StudentServiceTest {
         student3.setGroupId(group1ID);
 
 
-        Mockito.doReturn(student3).when(studentRepository).findByEmail(sEmail3);
+        Mockito.doReturn(Optional.of(student3)).when(studentRepository).findByEmail(sEmail3);
         Mockito.doReturn(Optional.of(student2)).when(studentRepository).findById(sID2);
         Mockito.doReturn(Optional.of(student1)).when(studentRepository).findById(sID1);
+        Mockito.doReturn(List.of(student1, student2, student3)).when(studentRepository).findAll();
         Mockito.doReturn(missingStudent).when(studentRepository).findById(missingID);
 
         Mockito.doReturn(Optional.of(group1)).when(groupRepository).findById(group1ID);
 
+    }
+
+    @Test
+    public void getAllGroups() {
+        List<Student> students = studentService.getAllStudents();
+        assertEquals(students.size(), 3 );
+        assertTrue(students.contains(student1));
+        assertTrue(students.contains(student2));
+        assertTrue(students.contains(student3));
     }
 
     @Test
@@ -105,7 +116,13 @@ public class StudentServiceTest {
             assertTrue(assumeInDB.contains(s));
         }
         studentsList.add(student3);
-        assertThrows(ServiceException.class, () ->  studentService.addStudents(studentsList));
+        assertThrows(ServiceException.class, () -> studentService.addStudents(studentsList));
+    }
+
+    @Test
+    public void getStudentByEmail() {
+        assertEquals(student3, studentService.getStudentByEmail(sEmail3));
+        assertNull(studentService.getStudentByEmail("test"));
     }
 
     @Test
@@ -118,17 +135,17 @@ public class StudentServiceTest {
             assertTrue(assumeInDB.contains(s));
         }
         studentsList.add(student3);
-        assertThrows(ServiceException.class, () ->  studentService.updateStudents(studentsList));
+        assertThrows(ServiceException.class, () -> studentService.updateStudents(studentsList));
     }
 
 
     @Test
     public void addAndDeleteActivityStudent() throws ServiceException {
-        assertEquals(studentService.addStudentActivity(activity.getId(), sID1),activity.getId() );
+        assertEquals(studentService.addStudentActivity(activity.getId(), sID1), activity.getId());
         assertThrows(ServiceException.class, () -> studentService.addStudentActivity(activityInDb.getId(), missingID));
-        assertThrows(ServiceException.class, () ->studentService.addStudentActivity(activityInGroup.getId(), sID1));
+        assertThrows(ServiceException.class, () -> studentService.addStudentActivity(activityInGroup.getId(), sID1));
         assertEquals(studentService.deleteStudentActivity(activity.getId(), sID1), activity.getId());
-        assertThrows(ServiceException.class, () ->studentService.deleteStudentActivity(activity.getId(), missingID));
+        assertThrows(ServiceException.class, () -> studentService.deleteStudentActivity(activity.getId(), missingID));
     }
 
 

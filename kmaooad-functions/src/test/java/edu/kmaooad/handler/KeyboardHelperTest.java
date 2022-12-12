@@ -6,6 +6,7 @@ import edu.kmaooad.helper.KeyboardHelper;
 import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,5 +43,17 @@ public class KeyboardHelperTest {
         ReplyKeyboardMarkup result = keyboardHelper.buildGroupMenuWithCancel();
 
         assertEquals(result.getKeyboard().get(0).get(0).getText(), GroupConstants.GROUP_ADD_BUTTON_LABEL);
+    }
+
+    @Test
+    public void buildAdditionalActionsVerticalTest() {
+        final int N = 10;
+        List<String> actions = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            actions.add("option " + i);
+        }
+        ReplyKeyboardMarkup result = keyboardHelper.buildAdditionalActionsVertical(actions);
+        assertEquals(result.getKeyboard().get(0).get(0).getText(), GlobalConstants.CANCEL_BUTTON_LABEL);
+        assertEquals(result.getKeyboard().size(), N + 1);
     }
 }
