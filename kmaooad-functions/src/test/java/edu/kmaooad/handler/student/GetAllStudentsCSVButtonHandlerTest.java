@@ -3,6 +3,7 @@ package edu.kmaooad.handler.student;
 import edu.kmaooad.constants.bot.ConversationState;
 import edu.kmaooad.constants.bot.StudentConstants;
 import edu.kmaooad.handler.impl.student.GetAllStudentsCSVButtonHandler;
+import edu.kmaooad.handler.impl.student.StudentButtonsHandler;
 import edu.kmaooad.helper.KeyboardHelper;
 import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
@@ -40,6 +41,9 @@ public class GetAllStudentsCSVButtonHandlerTest {
     @Mock
     private StudentService studentService;
 
+    @Mock
+    private StudentButtonsHandler studentButtonsHandler;
+
     private Message message;
     private Update update;
     private UserSession userSession;
@@ -76,8 +80,6 @@ public class GetAllStudentsCSVButtonHandlerTest {
         Mockito.doReturn(new SendMessage()).when(telegramService).sendMessage(Mockito.anyLong(), Mockito.anyString());
         HandlerResponse handlerResponse = getAllStudentsCSVButtonHandler.handle(userRequest);
 
-        Assertions.assertNull(handlerResponse.getResult());
-        Assertions.assertTrue(handlerResponse.isSuccess());
-        Assertions.assertEquals(userSession.getConversationState(), ConversationState.WAITING_FOR_STUDENT_CSV);
+        Assertions.assertEquals(userSession.getConversationState(), ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
     }
 }
