@@ -11,17 +11,18 @@ import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.service.ActivityService;
 import edu.kmaooad.service.GroupService;
+import edu.kmaooad.service.ServiceException;
 import edu.kmaooad.service.TelegramService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
-import static edu.kmaooad.constants.bot.GroupConstants.ASSIGNED;
+import static edu.kmaooad.constants.bot.GlobalConstants.ASSIGNED;
 import static edu.kmaooad.constants.bot.GroupConstants.GROUP_MAP_KEY;
 
 @Component
 @Slf4j
-public class AssignActivitiesToGroupHandler implements UserRequestHandler {
+public class AssignActivitiesToGroupHandler implements ButtonRequestHandler {
 
 
     private final KeyboardHelper keyboardHelper;
@@ -48,19 +49,32 @@ public class AssignActivitiesToGroupHandler implements UserRequestHandler {
     public HandlerResponse handle(UserRequest userRequest) {
         Group group = (Group) userRequest.getUserSession().getData().get(GroupConstants.GROUP_MAP_KEY);
         String text = userRequest.getUpdate().getMessage().getText();
-        if(text.contains(ASSIGNED)) {
-            String activityName = text.replace(ASSIGNED, "").trim();
-            Activity activity = activityService.getActivityByName(activityName);
-            groupService.deleteActivityGroup(activity.getId(), group.getId());
-        } else {
-            Activity activity = activityService.getActivityByName(text);
-            groupService.addActivityGroup(activity.getId(), group.getId());
+        log.info("Trying to assign/unassign activity " + text + " from group");
+        try {
+            if (text.contains(ASSIGNED)) {
+                String activityName = text.replace(ASSIGNED, "").trim();
+                Activity activity = activityService.getActivityByName(activityName);
+                groupService.deleteActivityGroup(activity.getId(), group.getId());
+                telegramService.sendMessage(userRequest.getChatId(),
+                        "Видалена активність " + activity.getName() + " з групи " + group.getName());
+                log.info("Deleted activity " + activityName + " from group " + group.getName());
+            } else {
+                Activity activity = activityService.getActivityByName(text);
+                groupService.addActivityGroup(activity.getId(), group.getId());
+                telegramService.sendMessage(userRequest.getChatId(),
+                        "Додана активність " + activity.getName() + " до групи " + group.getName());
+                log.info("Added activity " + activity.getName() + " to group " + group.getName());
+            }
+        } catch (ServiceException e) {
+            e.printStackTrace();
+            log.error("Failed to delete or add activity " + text + " to group" + group.getName());
         }
 
-        userRequest.getUserSession().getData().put(GROUP_MAP_KEY, groupService.getGroupById(group.getId()));
-        userRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_GROUP_TO_ASSIGN_CHOICE);
+        Group updatedGroup = groupService.getGroupById(group.getId());
 
-        return new HandlerResponse(telegramService.sendMessage(userRequest.getChatId(), "Збережено!"), true);
+        ReplyKeyboardMarkup replyKeyboardMarkup = keyboardHelper.buildAdditionalActionsVertical(activityService.getStatusOfActivitiesForGroup(updatedGroup));
+        userRequest.getUserSession().getData().put(GROUP_MAP_KEY, updatedGroup);
 
+        return new HandlerResponse(telegramService.sendMessage(userRequest.getChatId(), "Оберіть активність яку хочете додати до " + updatedGroup.getName() + " ⤵️", replyKeyboardMarkup), true);
     }
 }
