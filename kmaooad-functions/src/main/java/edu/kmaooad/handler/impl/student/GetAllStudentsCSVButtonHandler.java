@@ -17,7 +17,7 @@ import static edu.kmaooad.constants.bot.StudentConstants.STUDENT_CSV_FORMAT_EXAM
 
 @Component
 @Slf4j
-public class GetAllStudentsСSVButtonHandler implements ButtonRequestHandler {
+public class GetAllStudentsCSVButtonHandler implements ButtonRequestHandler {
     private final StudentService studentService;
 
     private final TelegramService telegramService;
@@ -25,7 +25,7 @@ public class GetAllStudentsСSVButtonHandler implements ButtonRequestHandler {
     private final StudentButtonsHandler studentButtonsHandler;
     private final MassStudentsService massStudentsService;
 
-    public GetAllStudentsСSVButtonHandler(StudentService studentService, MassStudentsService massStudentsService, TelegramService telegramService, KeyboardHelper keyboardHelper, StudentButtonsHandler studentButtonsHandler) {
+    public GetAllStudentsCSVButtonHandler(StudentService studentService, MassStudentsService massStudentsService, TelegramService telegramService, KeyboardHelper keyboardHelper, StudentButtonsHandler studentButtonsHandler) {
         this.studentService = studentService;
         this.massStudentsService = massStudentsService;
         this.telegramService = telegramService;

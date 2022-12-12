@@ -44,9 +44,7 @@ public class ShowAllStudentsButtonHandler implements ButtonRequestHandler {
 
         for (Student student : students) {
             telegramService.sendMessage(dispatchRequest.getChatId(),
-                    String.format(StudentConstants.SHOW_FULL_STUDENT,
-                            student.getLastName(), student.getFirstName(), student.getPatronym(),
-                            student.getId(),
+                    String.format(StudentConstants.SHOW_FULL_STUDENT, student.getLastName(), student.getFirstName(), student.getPatronym(), student.getId(),
                             student.getEmail(), student.getDepartment(), student.getActivities().size()));
         }
 

@@ -32,7 +32,6 @@ public class MassStudentsService {
                         student.getLastName(), student.getFirstName(), student.getPatronym(),
                         student.getEmail(),
                         student.getDepartment(),
-//                        student.getGroupId(),
                         String.join(",", student.getActivities())
                 ))
                 .collect(Collectors.joining("\n"));
