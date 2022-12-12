@@ -41,11 +41,11 @@ public class ActivityService {
     }
 
     public Activity getActivityByName(String name){
-        Optional<Activity> group = activityRepository.findByName(name);
-        if(group.isPresent()){
-            return group.get();
+        Optional<Activity> activity = activityRepository.findByName(name);
+        if(activity.isPresent()){
+            return activity.get();
         } else {
-            log.warn("Group not found, name: " + name);
+            log.warn("Activity not found, name: " + name);
             return null;
         }
     }
@@ -85,6 +85,7 @@ public class ActivityService {
         }
         return activityList;
     }
+
     public Activity addActivity(Activity activity) throws ServiceException {
 
         Optional<Activity> found = activityRepository.findByName(activity.getName());
