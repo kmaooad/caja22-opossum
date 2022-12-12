@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,9 +58,19 @@ public class GroupServiceTest {
 
         activity.setId("1");
         Mockito.doReturn(Optional.of(group1)).when(groupRepository).findById(group1ID);
+        Mockito.doReturn(List.of(group1, group2)).when(groupRepository).findAll();
         Mockito.doReturn(Optional.of(group1)).when(groupRepository).findByName(group1Name);
         Mockito.doReturn(missingGroup).when(groupRepository).findById(missingID);
     }
+
+    @Test
+    public void getAllGroups() {
+        List<Group> groups = groupService.getAllGroups();
+        assertEquals(groups.size(), 2 );
+        assertTrue(groups.contains(group1));
+        assertTrue(groups.contains(group2));
+    }
+
 
     @Test
     public void addGroup() throws ServiceException {

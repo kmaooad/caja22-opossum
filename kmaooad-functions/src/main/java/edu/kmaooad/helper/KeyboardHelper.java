@@ -2,6 +2,7 @@ package edu.kmaooad.helper;
 
 import edu.kmaooad.constants.bot.GlobalConstants;
 import edu.kmaooad.constants.bot.GroupConstants;
+import edu.kmaooad.constants.bot.GroupTemplateConstants;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -76,6 +77,29 @@ public class KeyboardHelper {
         KeyboardRow keyboardRow2 = new KeyboardRow();
         keyboardRow2.add(GroupConstants.GROUP_DELETE_BUTTON_LABEL);
         keyboardRow2.add(GroupConstants.GROUP_SHOW_ALL_BUTTON_LABEL);
+
+        KeyboardRow keyboardRow3 = new KeyboardRow();
+        keyboardRow3.add(GroupConstants.GROUP_SHOW_ALL_ASSIGN_LABEL);
+
+        KeyboardRow keyboardRow4 = new KeyboardRow();
+        keyboardRow4.add(GlobalConstants.CANCEL_BUTTON_LABEL);
+
+        return ReplyKeyboardMarkup.builder()
+                .keyboard(List.of(keyboardRow1, keyboardRow2, keyboardRow3, keyboardRow4))
+                .selective(true)
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(false)
+                .build();
+    }
+
+    public ReplyKeyboardMarkup buildGroupTemplateMenuWithCancel(){
+        KeyboardRow keyboardRow1 = new KeyboardRow();
+        keyboardRow1.add(GroupTemplateConstants.GROUP_TEMPLATE_ADD_BUTTON_LABEL);
+        keyboardRow1.add(GroupTemplateConstants.GROUP_TEMPLATE_EDIT_BUTTON_LABEL);
+
+        KeyboardRow keyboardRow2 = new KeyboardRow();
+        keyboardRow2.add(GroupTemplateConstants.GROUP_TEMPLATE_DELETE_BUTTON_LABEL);
+        keyboardRow2.add(GroupTemplateConstants.GROUP_TEMPLATE_SHOW_ALL_BUTTON_LABEL);
 
         KeyboardRow keyboardRow3 = new KeyboardRow();
         keyboardRow3.add(GlobalConstants.CANCEL_BUTTON_LABEL);
