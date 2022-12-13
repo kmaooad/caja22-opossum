@@ -4,8 +4,10 @@ package edu.kmaooad;
 import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Group;
 import edu.kmaooad.model.Student;
+import edu.kmaooad.repositories.ActivityRepository;
 import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
+import edu.kmaooad.service.EmailService;
 import edu.kmaooad.service.ServiceException;
 import edu.kmaooad.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +40,12 @@ public class StudentServiceTest {
 
     @Mock
     GroupRepository groupRepository;
+
+    @Mock
+    EmailService emailService;
+
+    @Mock
+    ActivityRepository activityRepository;
 
     final static Student student1 = new Student();
     final static Student student2 = new Student();
@@ -86,6 +94,7 @@ public class StudentServiceTest {
         Mockito.doReturn(Optional.of(student3)).when(studentRepository).findByEmail(sEmail3);
         Mockito.doReturn(Optional.of(student2)).when(studentRepository).findById(sID2);
         Mockito.doReturn(Optional.of(student1)).when(studentRepository).findById(sID1);
+        Mockito.doReturn(Optional.of(activity)).when(activityRepository).findById(activityId);
         Mockito.doReturn(List.of(student1, student2, student3)).when(studentRepository).findAll();
         Mockito.doReturn(missingStudent).when(studentRepository).findById(missingID);
 

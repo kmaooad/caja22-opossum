@@ -26,6 +26,9 @@ public class ActivityService {
     @Autowired
     private GroupService groupService;
 
+    @Autowired
+    private EmailService emailService;
+
     private final String splitter = " || ";
 
     public List<Activity> getAllActivities() {
