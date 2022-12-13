@@ -42,12 +42,18 @@ public class EmailService {
 
     public void notifyAboutCreationStudent(Student student) {
         sendEmail(student.getEmail(), "OpossumNotify. Вас було зареєстровано в наш бот",
-                "<h2>" + student.getLastName() + " " + student.getFirstName() + " " + student.getPatronym() + "</h2>, " +
+                "<h2>" + student.getLastName() + " " + student.getFirstName() + " " + student.getPatronym() + "</h2>, \n" +
                         "<h3>Вас було зареєстровано в наш бот як Студента " + student.getDepartment() + "</h3>"
         );
     }
 
     public void notifyAboutAddedActivity(Student student, Activity activity){
-
+        sendEmail(student.getEmail(), "OpossumNotify. Вам було додано активність " + activity.getName(),
+                "<h2>" + student.getLastName() + " " + student.getFirstName() + " " + student.getPatronym() + "</h2>, \n" +
+                        "<h3>Вам було додано активність " + activity.getName() + "</h3> \n "+
+                        "<b> Дата початку: " + activity.getStartDate() + "</b>\n "+
+                        "<b> Дата кінця: " + activity.getEndDate() + "</b>\n "+
+                        "<b> Статус: " + activity.getStatus() + "</b>\n "
+        );
     }
 }
