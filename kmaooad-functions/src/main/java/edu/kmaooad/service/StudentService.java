@@ -44,7 +44,7 @@ public class StudentService {
                 throw new ServiceException("Failed to add students: contains student " + s + " already exists in database");
             }
         }
-        students.forEach(emailService::notifyAboutCreationStudent);
+//        students.forEach(emailService::notifyAboutCreationStudent);
         studentRepository.saveAll(studentsAdded);
         return studentsAdded;
     }
@@ -82,9 +82,7 @@ public class StudentService {
                 if (a.equals(activityAdd))
                     throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " activity witch such id exists in this student in database");
 
-
-
-            emailService.notifyAboutAddedActivity(student.get(), activity.get());
+//            emailService.notifyAboutAddedActivity(student.get(), activity.get());
             studentPresent.getActivities().add(activityAdd);
             studentRepository.save(studentPresent);
             return activityAdd;
