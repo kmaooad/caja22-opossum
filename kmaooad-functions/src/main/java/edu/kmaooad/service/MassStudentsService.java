@@ -54,7 +54,7 @@ public class MassStudentsService {
                 .collect(Collectors.joining("\n"));
     }
 
-    public List<Student> parseStudentCSVandReplaceAll(String message) throws ServiceCSVException {
+    public List<Student> parseStudentCSV(String message) throws ServiceCSVException {
         final int numberOfSingleStudentParams = 5;
         String[] lines = message.trim().split("\n");
         List<Student> students;
@@ -97,6 +97,10 @@ public class MassStudentsService {
                     lines[students.indexOf(duplicateEmail.get())]);
         }
         log.info("No email duplicates found");
+        return students;
+    }
+
+    public List<Student> replaceAllStudents(List<Student> students) {
         studentRepository.deleteAll();
         List<Student> result = studentRepository.saveAll(students);
         log.info("Saved: " + result);
