@@ -2,6 +2,7 @@ package edu.kmaooad.handler;
 
 import edu.kmaooad.constants.bot.GlobalConstants;
 import edu.kmaooad.constants.bot.GroupConstants;
+import edu.kmaooad.constants.bot.StudentConstants;
 import edu.kmaooad.helper.KeyboardHelper;
 import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -55,5 +56,12 @@ public class KeyboardHelperTest {
         ReplyKeyboardMarkup result = keyboardHelper.buildAdditionalActionsVertical(actions);
         assertEquals(result.getKeyboard().get(0).get(0).getText(), GlobalConstants.CANCEL_BUTTON_LABEL);
         assertEquals(result.getKeyboard().size(), N + 1);
+    }
+
+    @Test
+    public void buildGroupTemplateMenuWithCancelTest() {
+        ReplyKeyboardMarkup result = keyboardHelper.buildStudentMenuWithCancel();
+        assertTrue(result.getKeyboard().get(0).contains(StudentConstants.STUDENT_SHOW_CSV_BUTTON_LABEL));
+        assertTrue(result.getKeyboard().get(0).contains(StudentConstants.STUDENT_UPDATE_CSV_BUTTON_LABEL));
     }
 }

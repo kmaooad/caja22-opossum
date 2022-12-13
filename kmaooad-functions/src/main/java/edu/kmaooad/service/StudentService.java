@@ -1,21 +1,14 @@
 package edu.kmaooad.service;
 
-import edu.kmaooad.model.Group;
+import edu.kmaooad.model.Activity;
 import edu.kmaooad.model.Student;
+import edu.kmaooad.repositories.ActivityRepository;
 import edu.kmaooad.repositories.GroupRepository;
 import edu.kmaooad.repositories.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.MailSendException;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.mail.SendFailedException;
-import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,33 +18,17 @@ import java.util.Optional;
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private ActivityRepository activityRepository;
+
     @Autowired
     private GroupRepository groupRepository;
-
     @Autowired
-    private JavaMailSender mailSender;
-
-    private void sendEmail(String email){
-
-        try {
-            MimeMessage msg = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-        helper.setTo(email);
-        helper.setSubject("Opossum bot");
-        helper.setText("<h1>Added student with this email</h1>", true);
-            mailSender.send(msg);
-        } catch (SendFailedException e ) {
-            e.printStackTrace();
-        } catch (MessagingException e ) {
-            e.printStackTrace();
-        }catch (MailSendException e ) {
-            e.printStackTrace();
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
+    private EmailService emailService;
 
 
-    }
+
     /**
      * @param students - list of students to add
      * @return added students updated, if at least one already exists - throws exception
@@ -67,9 +44,7 @@ public class StudentService {
                 throw new ServiceException("Failed to add students: contains student " + s + " already exists in database");
             }
         }
-        for (Student s : students) {
-                sendEmail(s.getEmail());
-        }
+//        students.forEach(emailService::notifyAboutCreationStudent);
         studentRepository.saveAll(studentsAdded);
         return studentsAdded;
     }
@@ -98,27 +73,16 @@ public class StudentService {
     public String addStudentActivity(String activityAdd, String studentId) throws ServiceException {
 
         Optional<Student> student = studentRepository.findById(studentId);
+        Optional<Activity> activity = activityRepository.findById(activityAdd);
 
-        if (student.isPresent()) {
+        if (student.isPresent() && activity.isPresent()) {
             Student studentPresent = student.get();
             List<String> activities = studentPresent.getActivities();
-            for (String a : activities) {
-                if (a.equals(activityAdd)) {
+            for (String a : activities)
+                if (a.equals(activityAdd))
                     throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " activity witch such id exists in this student in database");
 
-                }
-            }
-            Optional<Group> group = groupRepository.findById(studentPresent.getGroupId());
-            if (group.isPresent()) {
-                Group groupPresent = group.get();
-                List<String> activitiesInGroup = groupPresent.getActivities();
-                for (String a : activitiesInGroup) {
-                    if (a.equals(activityAdd)) {
-                        throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " student is assigned group with such activity");
-
-                    }
-                }
-            }
+//            emailService.notifyAboutAddedActivity(student.get(), activity.get());
             studentPresent.getActivities().add(activityAdd);
             studentRepository.save(studentPresent);
             return activityAdd;
@@ -149,6 +113,7 @@ public class StudentService {
             activities.remove(activityFound);
             studentPresent.setActivities(activities);
             studentRepository.save(studentPresent);
+
             return activityId;
         }
         throw new ServiceException("Failed to delete activity with: " + activityId + " to student with id: " + studentId + " student with such id doesn`t exist in database");
@@ -174,7 +139,6 @@ public class StudentService {
                 found.setEmail(s.getEmail());
                 found.setFirstName(s.getFirstName());
                 found.setDepartment(s.getDepartment());
-                found.setGroupId(s.getGroupId());
                 found.setPatronym(s.getPatronym());
                 updatedStudents.add(s);
             } else {

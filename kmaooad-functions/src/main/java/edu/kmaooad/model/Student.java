@@ -21,7 +21,6 @@ public class Student {
     String firstName;
     String lastName;
     String patronym;
-    String groupId;
     String department;
     String email;
     List<String> activities = new ArrayList<>();
