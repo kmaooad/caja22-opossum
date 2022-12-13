@@ -1,7 +1,6 @@
 package edu.kmaooad.handler.student;
 
 import edu.kmaooad.constants.bot.ConversationState;
-import edu.kmaooad.constants.bot.StudentConstants;
 import edu.kmaooad.handler.impl.student.GetAllStudentsCSVButtonHandler;
 import edu.kmaooad.handler.impl.student.StudentButtonsHandler;
 import edu.kmaooad.helper.KeyboardHelper;
@@ -9,6 +8,7 @@ import edu.kmaooad.model.HandlerResponse;
 import edu.kmaooad.model.UserRequest;
 import edu.kmaooad.model.UserSession;
 import edu.kmaooad.service.MassStudentsService;
+import edu.kmaooad.service.ServiceCSVException;
 import edu.kmaooad.service.StudentService;
 import edu.kmaooad.service.TelegramService;
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +25,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import static edu.kmaooad.service.ServiceCSVException.TypeOfCSVException.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -81,5 +84,46 @@ public class GetAllStudentsCSVButtonHandlerTest {
         HandlerResponse handlerResponse = getAllStudentsCSVButtonHandler.handle(userRequest);
 
         Assertions.assertEquals(userSession.getConversationState(), ConversationState.WAITING_FOR_MAIN_MENU_ACTION_CHOICE);
+    }
+
+
+    @Test
+    public void exceptionNotEnoughParamsThrowTestHandler() throws ServiceCSVException {
+        Mockito.doThrow(new ServiceCSVException(NOT_ENOUGH_PARAMS_ON_LINE, "")).when(massStudentsService).parseStudentCSV(any());
+        BotApiMethod<?> result = new SendMessage();
+        Mockito.doReturn(new SendMessage()).when(telegramService).sendMessage(Mockito.anyLong(), Mockito.anyString());
+        HandlerResponse handlerResponse = getAllStudentsCSVButtonHandler.handle(userRequest);
+
+        Assertions.assertEquals(userSession.getConversationState(), ConversationState.WAITING_FOR_STUDENT_CSV);
+    }
+
+    @Test
+    public void exceptionEmailDuplicateThrowTestHandler() throws ServiceCSVException {
+        Mockito.doThrow(new ServiceCSVException(EMAIL_DUPLICATE, "")).when(massStudentsService).parseStudentCSV(any());
+        BotApiMethod<?> result = new SendMessage();
+        Mockito.doReturn(new SendMessage()).when(telegramService).sendMessage(Mockito.anyLong(), Mockito.anyString());
+        HandlerResponse handlerResponse = getAllStudentsCSVButtonHandler.handle(userRequest);
+
+        Assertions.assertEquals(userSession.getConversationState(), ConversationState.WAITING_FOR_STUDENT_CSV);
+    }
+
+    @Test
+    public void exceptionActivityThrowTestHandler() throws ServiceCSVException {
+        Mockito.doThrow(new ServiceCSVException(ACTIVITY_DOESNT_EXIST, "")).when(massStudentsService).parseStudentCSV(any());
+        BotApiMethod<?> result = new SendMessage();
+        Mockito.doReturn(new SendMessage()).when(telegramService).sendMessage(Mockito.anyLong(), Mockito.anyString());
+        HandlerResponse handlerResponse = getAllStudentsCSVButtonHandler.handle(userRequest);
+
+        Assertions.assertEquals(userSession.getConversationState(), ConversationState.WAITING_FOR_STUDENT_CSV);
+    }
+
+    @Test
+    public void exceptionThrowTestHandler() throws ServiceCSVException {
+        Mockito.doThrow(new RuntimeException()).when(massStudentsService).parseStudentCSV(any());
+        BotApiMethod<?> result = new SendMessage();
+        Mockito.doReturn(new SendMessage()).when(telegramService).sendMessage(Mockito.anyLong(), Mockito.anyString());
+        HandlerResponse handlerResponse = getAllStudentsCSVButtonHandler.handle(userRequest);
+
+        Assertions.assertEquals(userSession.getConversationState(), ConversationState.WAITING_FOR_STUDENT_CSV);
     }
 }
