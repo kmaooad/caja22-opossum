@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,7 +27,6 @@ public class StudentService {
     private GroupRepository groupRepository;
     @Autowired
     private EmailService emailService;
-
 
 
     /**
@@ -44,7 +44,6 @@ public class StudentService {
                 throw new ServiceException("Failed to add students: contains student " + s + " already exists in database");
             }
         }
-//        students.forEach(emailService::notifyAboutCreationStudent);
         studentRepository.saveAll(studentsAdded);
         return studentsAdded;
     }
@@ -149,5 +148,16 @@ public class StudentService {
         studentRepository.saveAll(updatedStudents);
         return updatedStudents;
     }
+
+    public List<Student> replaceAllStudents(List<Student> students) {
+        List<String> emails = students.stream().map(Student::getEmail).collect(Collectors.toList());
+        List<Student> newcomers = studentRepository.findByEmailIsNotIn(emails);
+//        newcomers.forEach(emailService::notifyAboutCreationStudent);
+        studentRepository.deleteAll();
+        List<Student> result = studentRepository.saveAll(students);
+        log.info("Saved: " + result);
+        return result;
+    }
+
 
 }

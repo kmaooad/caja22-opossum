@@ -22,11 +22,9 @@ import static edu.kmaooad.service.ServiceCSVException.TypeOfCSVException.NOT_ENO
 @Service
 @Slf4j
 public class MassStudentsService {
-    private final StudentRepository studentRepository;
     private final ActivityService activityService;
 
-    public MassStudentsService(StudentRepository studentRepository, ActivityService activityService) {
-        this.studentRepository = studentRepository;
+    public MassStudentsService(ActivityService activityService) {
         this.activityService = activityService;
     }
 
@@ -87,10 +85,5 @@ public class MassStudentsService {
         return students;
     }
 
-    public List<Student> replaceAllStudents(List<Student> students) {
-        studentRepository.deleteAll();
-        List<Student> result = studentRepository.saveAll(students);
-        log.info("Saved: " + result);
-        return result;
-    }
+
 }
