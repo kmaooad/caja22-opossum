@@ -81,7 +81,7 @@ public class StudentService {
                 if (a.equals(activityAdd))
                     throw new ServiceException("Failed to add activity: " + activityAdd + " to student with id: " + studentId + " activity witch such id exists in this student in database");
 
-//            emailService.notifyAboutAddedActivity(student.get(), activity.get());
+            emailService.notifyAboutAddedActivity(student.get(), activity.get());
             studentPresent.getActivities().add(activityAdd);
             studentRepository.save(studentPresent);
             return activityAdd;
@@ -152,7 +152,7 @@ public class StudentService {
     public List<Student> replaceAllStudents(List<Student> students) {
         List<String> emails = students.stream().map(Student::getEmail).collect(Collectors.toList());
         List<Student> newcomers = studentRepository.findByEmailIsNotIn(emails);
-//        newcomers.forEach(emailService::notifyAboutCreationStudent);
+        newcomers.forEach(emailService::notifyAboutCreationStudent);
         studentRepository.deleteAll();
         List<Student> result = studentRepository.saveAll(students);
         log.info("Saved: " + result);
