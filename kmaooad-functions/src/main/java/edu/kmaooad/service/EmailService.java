@@ -29,21 +29,15 @@ public class EmailService {
             helper.setSubject(subject);
             helper.setText(body, true);
             mailSender.send(msg);
-        } catch (SendFailedException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (MailSendException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
+        } catch (MessagingException | MailSendException | NullPointerException e) {
             e.printStackTrace();
         }
     }
 
     public void notifyAboutCreationStudent(Student student) {
         sendEmail(student.getEmail(), "OpossumNotify. Вас було зареєстровано в наш бот",
-                "<h2>" + student.getLastName() + " " + student.getFirstName() + " " + student.getPatronym() + "</h2>, \n" +
-                        "<h3>Вас було зареєстровано в наш бот як Студента " + student.getDepartment() + "</h3>"
+                "<h2>" + student.getLastName() + " " + student.getFirstName() + " " + student.getPatronym() + ", </h2> \n" +
+                        "<h3> Вас було зареєстровано в наш бот як Студента " + student.getDepartment() + "</h3>"
         );
     }
 

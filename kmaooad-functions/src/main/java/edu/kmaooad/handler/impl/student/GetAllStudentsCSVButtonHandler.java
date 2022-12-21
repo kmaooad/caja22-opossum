@@ -43,7 +43,7 @@ public class GetAllStudentsCSVButtonHandler implements ButtonRequestHandler {
         log.info("Getting students CSV");
         String message = dispatchRequest.getUpdate().getMessage().getText();
         try {
-            massStudentsService.replaceAllStudents(massStudentsService.parseStudentCSV(message));
+            studentService.replaceAllStudents(massStudentsService.parseStudentCSV(message));
         } catch (ServiceCSVException e) {
             log.warn("Catched " + e);
             dispatchRequest.getUserSession().setConversationState(ConversationState.WAITING_FOR_STUDENT_CSV);

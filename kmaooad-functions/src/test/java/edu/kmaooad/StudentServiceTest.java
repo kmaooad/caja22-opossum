@@ -152,5 +152,10 @@ public class StudentServiceTest {
         assertThrows(ServiceException.class, () -> studentService.deleteStudentActivity(activity.getId(), missingID));
     }
 
+    @Test
+    public void replaceAll() throws ServiceException {
+        studentService.replaceAllStudents(new ArrayList<>());
+    }
+
 
 }
